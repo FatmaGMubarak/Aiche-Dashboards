@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+body{
+    /* background-color: rgb(243, 244, 246); */
+    background-color: #f3f4f6;
+}
+
+.ant-menu-item{
+color: white !important;
+}
+.ant-menu-submenu-title{
+color: white !important;
+}
+.ant-menu-submenu-selected div{
+color: #EDC53A !important;
+}
+.ant-menu-submenu-active div{
+color: #EDC53A !important;
+}
+
+.ant-menu-item-selected{
+color: #EDC53A !important;
+}
+.ant-menu-item-active{
+color: #EDC53A !important;
+}
+.ant-menu-vertical li,
+.ant-menu-vertical div{
+color: black !important;
+}
+.ant-menu-item-selected::after{
+border-bottom-color: #EDC53A !important;
+}
+
+.ant-menu-item-active::after{
+    border-bottom-color: #EDC53A !important;
+
+}
+
+.ant-menu-submenu-selected::after{
+    border-bottom-color: #EDC53A !important;
+}
+.ant-menu-submenu-active::after{
+    border-bottom-color: #EDC53A !important;
+}
