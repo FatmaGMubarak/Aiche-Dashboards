@@ -47,7 +47,7 @@ function AppContent() {
     <>
                     <ToastContainer position="top-right" autoClose={3000} />
 
-<div className="flex h-screen">
+{/* <div className="flex h-screen"> */}
         {showNavbar && <NavBar auth={auth} />}
 
       <Routes>
@@ -85,7 +85,7 @@ function AppContent() {
         <Route path="/committees/:committeeId/edit-session-form/:sessionId" element={<EditSessionForm />} />
         <Route path="/committees/:committeeId/edit-session-form/:sessionId" element={<EditSessionForm />} />
       </Routes>
-</div>
+{/* </div> */}
     </>
   );
 }

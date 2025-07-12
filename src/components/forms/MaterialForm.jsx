@@ -40,6 +40,7 @@ const dispatch = useDispatch()
   
       const result = await dispatch(createMaterial({materialData: formData})).unwrap();
       if (result) {
+        notify("Your material is added successfully", "success")
         nav("/material-page");
       }
     } catch (error) {

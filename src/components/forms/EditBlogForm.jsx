@@ -106,10 +106,9 @@ image: Yup.mixed()
       const imageUrl = URL.createObjectURL(file);
       setSelectedImage(imageUrl);
       formik.setFieldValue("image", file);
-    } else {
-      formik.setFieldValue("image", null);
     }
   };
+
 
   return (
     <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-10 pb-0 pt-16">
@@ -120,7 +119,7 @@ image: Yup.mixed()
         
         <div className="flex flex-col items-center w-full md:w-1/3">
           <label htmlFor="image" className="cursor-pointer group">
-            <div className="relative w-32 h-32 rounded-full border-4 border-blue-400 overflow-hidden group-hover:opacity-90 transition-all">
+            <div className="relative w-32 h-32 rounded-full border-4 border-customBlue3 overflow-hidden group-hover:opacity-90 transition-all">
               {selectedImage ? (
                 <img
                   src={selectedImage}
@@ -128,7 +127,7 @@ image: Yup.mixed()
                   className="object-cover w-full h-full"
                 />
               ) : (
-                <div className="flex flex-col items-center justify-center w-full h-full text-blue-500">
+                <div className="flex flex-col items-center justify-center w-full h-full text-customBlue3">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -156,6 +155,8 @@ image: Yup.mixed()
               accept="image/*"
               className="hidden"
               onChange={handleImageUpload}
+              onBlur={formik.handleBlur}
+
             />
           </label>
           {formik.errors.image && formik.touched.image && (
@@ -219,7 +220,7 @@ image: Yup.mixed()
   </label>
   <select
     id="countries"
-    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-customBlue3 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-customBlue3 dark:focus:border-blue-500"
+    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-customBlue3 focus:border-customBlue3 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-customBlue3 dark:focus:border-customBlue3"
   >
     <option value="">Choose an admin</option>
             {admin.map((ele, index)=>{
@@ -235,7 +236,7 @@ image: Yup.mixed()
           <button
             type="submit"
             disabled={loading}
-            className="mt-4 w-full mx-auto lg:w-[50%] bg-blue-600 text-white rounded-md py-2 text-sm font-semibold hover:bg-blue-700 transition-all disabled:opacity-50"
+            className="mt-4 w-full mx-auto lg:w-[50%] bg-customBlue3 text-white rounded-md py-2 text-sm font-semibold hover:bg-customBlue2 transition-all disabled:opacity-50"
           >
             {loading ? "Submitting..." : "Save Changes"}
           </button>

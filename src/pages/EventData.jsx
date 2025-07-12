@@ -1,13 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchEventById, deleteEvent } from "../store/reducers/eventSlice";
+import notify from "../hooks/Notifications";
+import DeleteModal from '../components/confirm/DeleteModal'
 
 export default function EventData() {
   const nav = useNavigate();
   const { id } = useParams();
   const event = useSelector((state) => state.event?.event);
-  const loading = useSelector((state) => state.event?.loading); // Get loading state
+  const loading = useSelector((state) => state.event?.loading);
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -20,8 +23,18 @@ export default function EventData() {
     window.scrollTo(0, 0);
   }, []);
 
-  const handleDelete = () => {
+const handleDelete = () =>{
+  setIsModalOpen(true)
+}
+const handleCancel = () =>{
+  setIsModalOpen(false)
+}
+
+
+  const handleConfirm = () => {
     dispatch(deleteEvent(id));
+    notify("You deleted this event successfully", "success")
+
     nav("/event-page");
   };
 
@@ -34,6 +47,13 @@ export default function EventData() {
   }
 
   return (
+    <>
+    <DeleteModal
+    onConfirm={handleConfirm}
+    onCancel={handleCancel}
+    isOpen={isModalOpen}
+    message="Are you sure you want to delete this event?"
+    />
     <div className="w-full flex justify-center items-center min-h-screen pt-28 px-4">
       <div className="relative w-full sm:max-w-6xl flex flex-col lg:flex-row bg-white shadow-2xl rounded-lg overflow-hidden">
         <div className="flex flex-col p-8 w-full h-full justify-between">
@@ -94,5 +114,6 @@ export default function EventData() {
         </div>
       </div>
     </div>
+    </>
   );
 }

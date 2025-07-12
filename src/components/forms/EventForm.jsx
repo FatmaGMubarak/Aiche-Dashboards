@@ -63,7 +63,10 @@ export default function EventForm() {
           }
         });
         const result = await dispatch(createEvent(formData)).unwrap();
-        if (result) nav("/event-page");
+        if (result){
+                  notify("Your event is added successfully", "success")
+nav("/event-page");
+        } 
       } catch (error) {
         const err = error;
         const message = Array.isArray(err) ? err[0] : err?.message || err || "Something went wrong";

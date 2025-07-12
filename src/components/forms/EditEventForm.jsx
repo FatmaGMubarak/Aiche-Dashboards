@@ -312,7 +312,7 @@ nav("/event-page")
       checked={formik.values.status === "open"}
       onChange={formik.handleChange}
       onBlur={formik.handleBlur}
-      className="accent-blue-500"
+      className="accent-customBlue3"
     />
     <span>open</span>
   </label>
@@ -325,7 +325,7 @@ nav("/event-page")
       checked={formik.values.status === "closed"}
       onChange={formik.handleChange}
       onBlur={formik.handleBlur}
-      className="accent-blue-500"
+      className="accent-customBlue3"
     />
     <span>closed</span>
   </label>
@@ -338,7 +338,7 @@ nav("/event-page")
         <button
           type="submit"
           disabled={loading}
-          className="mt-4 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+          className="mt-4 bg-customBlue3 text-white px-6 py-2 rounded hover:bg-customBlue2 transition"
         >
           {loading ? "Saving..." : "Save Changes"}
         </button>

@@ -34,6 +34,8 @@ export default function AwardForm() {
         formData.append("date", values.date)
               const result = await dispatch(createAward(formData)).unwrap()
               if(result){
+                        notify("Your award is added successfully", "success")
+
                 nav("/award-page")
               }
     } catch (error) {

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { registerAdmin } from "../store/reducers/authSlice"; 
+import notify from "../hooks/Notifications";
 
 export default function RegisterAdminPage() {
   const admim = useSelector((state) => state.auth.admim);
@@ -44,19 +45,17 @@ export default function RegisterAdminPage() {
 
       await dispatch(registerAdmin(registerData)).unwrap();
 
-      setSuccess("Admin registered successfully!");
+      notify("Admin registered successfully!", "success")
       setFormData({ name: "", title: "", email: "", password: "" });
     } catch (err) {
-      setError(err.message || "Registration failed.");
+      notify("Registration failed.", "error")
     }
   };
 
   return (
     <div className="flex justify-center items-center w-full min-h-screen">
       <div className="max-w-xl bg-white p-8 rounded-2xl shadow-xl">
-        <h1 className="text-3xl font-bold mb-6 text-center text-blue-700">Register New Admin</h1>
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-        {success && <p className="text-green-600 text-center mb-4">{success}</p>}
+        <h1 className="text-3xl font-bold mb-6 text-center text-customBlue3">Register New Admin</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
@@ -95,7 +94,7 @@ export default function RegisterAdminPage() {
           />
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700"
+            className="w-full bg-customBlue3 text-white py-3 rounded-lg hover:bg-customBlue2"
           >
             Register Admin
           </button>

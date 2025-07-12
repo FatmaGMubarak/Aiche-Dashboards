@@ -53,7 +53,7 @@ export default function EventPage() {
             <select
               value={sortOrder}
               onChange={handleSortChange}
-              className="text-white bg-customBlue2 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2"
+              className="text-white bg-customBlue3 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2"
             >
               <option value="asc" className="bg-gray-400">
                 Ascendingly

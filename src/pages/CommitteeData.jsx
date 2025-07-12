@@ -1,11 +1,14 @@
 import blogImg from "../assets/top-view-pink-keyboard-with-copyspace.jpg";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import notify from "../hooks/Notifications";
 import avatar from "../assets/avatar.png"
 import { useSelector,useDispatch } from "react-redux";
 import { fetchCommitteeById, deleteCommittee } from "../store/reducers/committeeSlice";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import DeleteModal from '../components/confirm/DeleteModal'
 export default function BlogPage() {
   const committee = useSelector((state)=>state.committee?.committee)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const dispatch = useDispatch()
   const nav = useNavigate()
 const {id} = useParams()
@@ -19,9 +22,19 @@ useEffect(()=>{
 
   },[])
 
- const handleDelete = () => {
+const handleDelete = () =>{
+  setIsModalOpen(true)
+}
+
+const handleCancel = () =>{
+  setIsModalOpen(false);
+}
+
+ const handleConfirm = () => {
   dispatch(deleteCommittee(id)).then((res) => {
     if (res.meta.requestStatus === "fulfilled") {
+     notify("You deleted this committee successfully", "success")
+
       nav("/committee-page");
     } else {
       console.error("Failed to delete:", res.payload);
@@ -29,7 +42,15 @@ useEffect(()=>{
   });
 };
 
+
   return (
+    <>
+    <DeleteModal
+    onCancel={handleCancel}
+    onConfirm={handleConfirm}
+    isOpen={isModalOpen}
+    message="Are you sure you want to delete this committee?"
+    />
     <div className="flex justify-center items-center min-h-screen pt-28">
 <div className="relative w-[90%] sm:max-w-6xl flex flex-col lg:flex-row bg-white shadow-2xl hover:shadow-3xl hover:bg-gray-100 transition-all duration-300 h-[80vh] sm:h-[500px] md:h-[80vh] rounded-lg overflow-hidden">
         <img
@@ -93,5 +114,6 @@ useEffect(()=>{
         </div>
       </div>
     </div>
+    </>
   );
 }

@@ -48,6 +48,8 @@ export default function CommitteeForm() {
       }
       const result = await dispatch(createCommittee(formData)).unwrap()
       if(result){
+                notify("Your committee is added successfully", "success")
+
         nav("/committee-page")
       }
         } catch (error) {

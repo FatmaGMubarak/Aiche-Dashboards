@@ -55,7 +55,7 @@ export default function BlogCard() {
                     </div>
                     <Link
                       to={`/blog-page/${ele.id}`}
-                      className="inline-flex items-center justify-end px-3 py-2 text-sm font-medium text-center text-white bg-customBlue2 rounded-lg hover:bg-customBlue4"
+                      className="inline-flex items-center justify-end px-3 py-2 text-sm font-medium text-center text-white bg-customBlue3 rounded-lg hover:bg-customBlue2"
                     >
                       View Post
                       <svg

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import session from '../../assets/organization.png'
 import { useSelector,useDispatch } from "react-redux";
 import { fetchCommittee } from "../../store/reducers/committeeSlice";
@@ -7,6 +7,7 @@ import task from "../../assets/task-done.png"
 
 export default function CommitteeCard() {
   const {id} = useParams()
+  const nav = useNavigate()
   const committees = useSelector((state)=>state.committee?.committees)
   const loading = useSelector((state)=>state.committee.loading)
   const dispatch = useDispatch()
@@ -34,8 +35,12 @@ const handleViewLess = () =>{
   <div className="min-h-screen flex flex-col justify-center items-center w-full  py-10">
   <div className="w-full max-w-7xl grid gap-6 sm:grid-cols-2 md:grid-cols-3 px-5">
     {committees?.slice(0, visible).map((ele) => (
-      <Link
-        to={`/committee-data/${ele?.id}`}
+      <div
+      role="button"
+      tabIndex={0}
+      onClick={()=>{
+        nav(`/committee-data/${ele?.id}`)
+      }}
         key={ele.id}
         className="bg-white border border-gray-200 rounded-xl shadow-md hover:shadow-lg transition-transform transform hover:scale-105 overflow-hidden flex flex-col h-[400px]"
       >
@@ -53,21 +58,21 @@ const handleViewLess = () =>{
           <div className="flex justify-between mt-6">
             <Link
               to={`/committees/${ele?.id}/session-page`}
-              className="inline-flex items-center gap-2 px-4 py-1.5 bg-customBlue2 text-white text-sm font-medium rounded-lg hover:bg-customBlue4"
+              className="inline-flex items-center gap-2 px-4 py-1.5 bg-customBlue3 text-white text-sm font-medium rounded-lg hover:bg-customBlue2"
             >
               <img src={session} alt="session" className="w-5 h-5" />
               Sessions
             </Link>
             <Link
               to={`/committees/${ele?.id}/task-page`}
-              className="inline-flex items-center gap-2 px-4 py-1.5 bg-customBlue2 text-white text-sm font-medium rounded-lg hover:bg-customBlue4"
+              className="inline-flex items-center gap-2 px-4 py-1.5 bg-customBlue3 text-white text-sm font-medium rounded-lg hover:bg-customBlue2"
             >
               <img src={task} alt="task" className="w-5 h-5" />
               Tasks
             </Link>
           </div>
         </div>
-      </Link>
+      </div>
     ))}
   </div>
 

@@ -159,7 +159,7 @@ export default function EditAwardForm() {
         <button
             type="submit"
             disabled={loading}
-            className="mt-4 w-full lg:w-[40%] mx-auto bg-blue-600 text-white rounded-md py-2 text-sm font-semibold hover:bg-blue-700 transition-all disabled:opacity-50"
+            className="mt-4 w-full lg:w-[40%] mx-auto bg-customBlue3 text-white rounded-md py-2 text-sm font-semibold hover:bg-customBlue2 transition-all disabled:opacity-50"
           >
             {loading ? "Submitting..." : "Save Changes"}
           </button>

@@ -36,6 +36,7 @@ export default function TaskForm() {
               const result = await dispatch(createTask({ committee_id: committeeId, taskData: formData }));
 
               if (result){
+                notify("Your task is added successfully", "success")
                 nav(`/committees/${committeeId}/task-page`)
               }
     }catch (error) {

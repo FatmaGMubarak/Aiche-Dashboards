@@ -39,6 +39,7 @@ export default function SessionForm() {
          const result = await dispatch(createSession({ committee_id: committeeId, sessionData: formData }));
         
                       if (result){
+                        notify("Your session is added successfully", "success")
                         nav(`/committees/${committeeId}/session-page`)
                       }
     }catch (error) {

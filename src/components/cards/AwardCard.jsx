@@ -1,12 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector,useDispatch } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { fetchAwardById, deleteAward } from "../../store/reducers/awardSlice";
+import notify from "../../hooks/Notifications";
+import DeleteModal from '../../components/confirm/DeleteModal'
 export default function AwardCard() {
   const nav = useNavigate()
   const {id} = useParams()
   const award = useSelector((state)=>state.award?.award)
-
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const dispatch = useDispatch()
 
 useEffect(()=>{
@@ -20,11 +22,27 @@ useEffect(()=>{
 
   },[])
 
-const handleAwardDelete = () =>{
+const handleDelete = () =>{
+  setIsModalOpen(true)
+}
+
+const handleCancel = () =>{
+  setIsModalOpen(false)
+}
+
+const handleConfirm = () =>{
   dispatch(deleteAward(id))
+  notify("You deleted this award successfully", "success")
   nav("/award-page")
 }
   return (
+    <>
+    <DeleteModal
+    onCancel={handleCancel}
+    onConfirm={handleConfirm}
+    isOpen={isModalOpen}
+    message="Are you sure you want to delete this award?"
+    />
     <div className="flex justify-center items-center min-h-screen pt-28">
         <div className="w-[40vw] h-[30vh]">
             <div key={award?.id} className="bg-white shadow-lg rounded-lg p-6 hover:shadow-2xl transition-all">
@@ -36,7 +54,7 @@ const handleAwardDelete = () =>{
               <div className="flex justify-between items-center mt-7 pb:0 lg:pb-1">
             <Link
           to={`/edit-award-form/${award?.id}`}
-            className="flex items-center gap-2 px-7 py-1.5 bg-customBlue2 text-white font-semibold rounded-lg hover:bg-customBlue4 transition-all duration-300">
+            className="flex items-center gap-2 px-7 py-1.5 bg-customBlue3 text-white font-semibold rounded-lg hover:bg-customBlue2 transition-all duration-300">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -54,7 +72,7 @@ const handleAwardDelete = () =>{
               <p>Edit</p>
             </Link>
 
-            <button onClick={handleAwardDelete}
+            <button onClick={handleDelete}
              className="flex items-center gap-2 px-7 py-1.5 bg-red-800 text-white font-semibold rounded-lg hover:bg-red-900 transition-all ease-in-out duration-300 ml-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -77,5 +95,6 @@ const handleAwardDelete = () =>{
 
         </div>
     </div>
+    </>
   );
 }

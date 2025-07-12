@@ -52,6 +52,7 @@ export default function BlogForm() {
 
       const result = await dispatch(createBlog(formData)).unwrap()
       if(result){
+        notify("Your blog is added successfully", "success")
         nav("/blog-home")
       }
 

@@ -110,7 +110,7 @@ dispatch(fetchAwards())
       <div className="container mx-auto px-6 pb-12">
         <div className="flex flex-col sm:flex-row sm:justify-between items-center sm:relative">
           <div className="flex justify-center items-center w-full mx-auto">
-        <h2 className="text-3xl font-bold text-center text-white mb-8">
+        <h2 className="text-3xl font-bold text-center text-customBlue3 mb-8">
              Awards List</h2>
              </div>
              <div className="flex justify-center sm:justify-end items-center">

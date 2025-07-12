@@ -15,7 +15,6 @@ export default function AdminAssignmentPage() {
 
   const [selectedAdmin, setSelectedAdmin] = useState(null);
   const [selectedCommittee, setSelectedCommittee] = useState(null);
-  const [successMsg, setSuccessMsg] = useState("");
 
   useEffect(() => {
     if (!admim) {
@@ -30,7 +29,7 @@ export default function AdminAssignmentPage() {
 
   const handleAssign = async () => {
     if (!selectedAdmin || !selectedCommittee) {
-      alert("Please select both admin and committee.");
+      notify("Please select both admin and committee.", "error")
       return;
     }
 
@@ -40,10 +39,9 @@ export default function AdminAssignmentPage() {
         committeeId: selectedCommittee,
       })).unwrap();
 
-      setSuccessMsg("Admin successfully assigned!");
+      notify("Admin successfully assigned!", "success")
     } catch (error) {
-      console.error("Assignment error:", error);
-      setSuccessMsg("Failed to assign admin.");
+      notify("Failed to assign admin.", "error")
     }
   };
 
@@ -85,12 +83,10 @@ export default function AdminAssignmentPage() {
 
       <button
         onClick={handleAssign}
-        className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+        className="bg-customBlue3 text-white px-6 py-2 rounded hover:bg-customBlue2"
       >
         Assign
       </button>
-
-      {successMsg && <p className="mt-4 text-green-600 font-semibold">{successMsg}</p>}
     </div>
   );
 }

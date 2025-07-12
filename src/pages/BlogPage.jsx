@@ -1,15 +1,19 @@
 import blogImg from "../assets/top-view-pink-keyboard-with-copyspace.jpg";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import avatar from "../assets/avatar.png";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchBlogById, deleteBlog } from "../store/reducers/blogSlice";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import notify from "../hooks/Notifications";
+import DeleteModal from '../components/confirm/DeleteModal'
 
 export default function BlogPage() {
   const nav = useNavigate();
   const { id } = useParams();
   const blog = useSelector((state) => state.blog?.blog);
   const loading = useSelector((state) => state.blog?.loading);
+    const [isModalOpen, setIsModalOpen] = useState(false)
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -22,10 +26,23 @@ export default function BlogPage() {
     window.scrollTo(0, 0);
   }, []);
 
-  const handleBlogDelete = () => {
-    dispatch(deleteBlog(id));
+
+  
+  const handleDelete = () =>{
+setIsModalOpen(true)
+  }
+
+  const handleCancel = () =>{
+    setIsModalOpen(false)
+  }
+
+  const handleConfirm = () =>{
+        dispatch(deleteBlog(id));
+        setIsModalOpen(false)
+        notify("You deleted this blog successfully", "success")
+        
     nav("/blog-home");
-  };
+  }
 
   if (loading || !blog) {
     return (
@@ -36,6 +53,12 @@ export default function BlogPage() {
   }
 
   return (
+    <>
+    <DeleteModal onConfirm={handleConfirm}
+    onCancel={handleCancel}
+    isOpen={isModalOpen}
+message="Are you sure you want to delete this blog?"
+/>
     <div className="flex justify-center items-center min-h-screen pt-28">
       <div className="relative w-[90%] sm:max-w-6xl flex flex-col lg:flex-row bg-white shadow-2xl hover:shadow-3xl hover:bg-gray-100 transition-all duration-300 h-[80vh] sm:h-[500px] md:h-[80vh] rounded-lg overflow-hidden">
         <img
@@ -89,7 +112,7 @@ export default function BlogPage() {
             </Link>
 
             <button
-              onClick={handleBlogDelete}
+              onClick={handleDelete}
               className="flex items-center gap-2 px-7 py-1.5 bg-red-800 text-white font-semibold rounded-lg hover:bg-red-900 transition-all ease-in-out duration-300 ml-4"
             >
               <svg
@@ -112,5 +135,6 @@ export default function BlogPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

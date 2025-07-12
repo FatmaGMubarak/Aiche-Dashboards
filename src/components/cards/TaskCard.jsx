@@ -2,12 +2,17 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTasks, deleteTask } from '../../store/reducers/taskSlice';
+import DeleteModal from '../../components/confirm/DeleteModal'
+import notify from '../../hooks/Notifications';
 export default function TaskCard() {
   const dispatch = useDispatch();
   const nav = useNavigate();
   const { id: committeeId } = useParams(); 
 const tasks = useSelector((state) => state.task?.tasks || []);
+const task = useSelector((state)=>state.tasks?.task)
 const [visible, setVisible] = useState(9);
+const [isModalOpen, setIsModalOpen] = useState(false)
+const [taskToDelete, setTaskToDelete] = useState(null)
 
 useEffect(() => {
   dispatch(fetchTasks());
@@ -23,9 +28,36 @@ if (!tasks.length) return <p className="text-center">Loading or no tasks availab
   const handleViewMore = () => setVisible((prev) => prev + 9);
   const handleViewLess = () => setVisible((prev) => (prev > 9 ? prev - 9 : prev));
 
+  const handleDelete = (id) =>{
+    setTaskToDelete(id)
+    setIsModalOpen(true)
+  }
 
+  const handleConfirm = () =>{
+    const comm_id = committeeId;  
+    const id = taskToDelete;  
+    if (comm_id && id) {  
+       dispatch(deleteTask({ comm_id, id })); 
+      notify("You deleted this task successfully", "success")
+      dispatch(fetchTasks())
+    } else {
+      console.error("Invalid committee ID or task ID");
+    }
+    setIsModalOpen(false)
+  }
+  
+const handleCancel = () =>{
+  setIsModalOpen(false)
+}
   
   return (
+    <>
+    <DeleteModal
+    onCancel={handleCancel}
+    onConfirm={handleConfirm}
+    isOpen={isModalOpen}
+    message="Are you sure you want to delete this task?"
+    />
     <div className="max-w-5xl mx-auto px-5 space-y-12">
       {filteredTasks.slice(0, visible).map((ele) => (
         <div
@@ -35,16 +67,10 @@ if (!tasks.length) return <p className="text-center">Loading or no tasks availab
           <div className="w-full flex justify-between items-center">
             <h5 className="text-xl font-bold text-gray-900">{ele?.title}</h5>
             <button
-             onClick={async() => {
-    const comm_id = committeeId;  
-    const id = ele?.id;  
-    if (comm_id && id) {  
-      await dispatch(deleteTask({ comm_id, id })); 
-      dispatch(fetchTasks())
-    } else {
-      console.error("Invalid committee ID or task ID");
-    }
-  }}
+             onClick={
+              ()=>{
+                handleDelete(ele?.id)
+             }}
               type="button"
               className="text-white bg-red-700 hover:bg-red-800 rounded-full px-3 py-1.5 text-sm"
             >
@@ -90,5 +116,6 @@ if (!tasks.length) return <p className="text-center">Loading or no tasks availab
         )}
       </div>
     </div>
+    </>
   );
 }

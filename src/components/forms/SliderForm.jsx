@@ -51,6 +51,7 @@ export default function SliderForm() {
       }
       const result = await dispatch(createBanner(formData)).unwrap()
       if(result){
+        notify("Your post is added successfully", "success")
         nav("/slider-page")
       }
         }catch (error) {
