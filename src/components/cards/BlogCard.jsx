@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBlogs } from "../../store/reducers/blogSlice";
+import { ThreeDot } from "react-loading-indicators";
 export default function BlogCard() {
   const blogs = useSelector((state) => state.blog?.blogs);
   const loading = useSelector((state) => state.blog.loading);
@@ -26,7 +27,8 @@ export default function BlogCard() {
       <div className="flex flex-col justify-center items-center h-fit w-full">
         {loading ? (
           <div className="w-full flex justify-center items-center py-12">
-            <p className="text-lg text-gray-500 animate-pulse">Loading blogs...</p>
+            
+            <ThreeDot color="#05284B" size="medium" text="" textColor="" />
           </div>
         ) : (
           <div className="w-full grid sm:grid-cols-2 md:grid-cols-3 gap-x-5 lg:gap-x-0 justify-center items-center p-5">

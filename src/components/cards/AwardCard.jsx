@@ -45,12 +45,17 @@ const handleConfirm = () =>{
     />
     <div className="flex justify-center items-center min-h-screen pt-28">
         <div className="w-[40vw] h-[30vh]">
-            <div key={award?.id} className="bg-white shadow-lg rounded-lg p-6 hover:shadow-2xl transition-all">
-                <div className='flex justify-between items-center'>
-              <h3 className="text-xl font-bold text-gray-800">{award?.title}</h3>
+            <div key={award?.id} className="bg-white shadow-lg rounded-lg p-6 hover:shadow-2xl transition-all flex flex-col">
+                <div className='flex'>
+              <div className="w-full flex justify-end items-center">
+                <h3 className="text-xl font-bold text-gray-800">{award?.title}</h3>
               </div>
-              <p className="text-sm text-gray-600 mt-1">{award?.date}</p>
-              <p className="mt-3 text-gray-700">{award?.description}</p>
+              <div className="w-full flex justify-end items-end">
+                <p className="text-sm text-gray-600 mt-1">{award?.date}</p>
+              </div>
+
+              </div>
+              <p className="mt-3 text-gray-700 text-center">{award?.description}</p>
               <div className="flex justify-between items-center mt-7 pb:0 lg:pb-1">
             <Link
           to={`/edit-award-form/${award?.id}`}

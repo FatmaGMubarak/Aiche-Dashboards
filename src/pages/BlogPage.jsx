@@ -6,6 +6,7 @@ import { fetchBlogById, deleteBlog } from "../store/reducers/blogSlice";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import notify from "../hooks/Notifications";
 import DeleteModal from '../components/confirm/DeleteModal'
+import { ThreeDot } from "react-loading-indicators";
 
 export default function BlogPage() {
   const nav = useNavigate();
@@ -47,7 +48,7 @@ setIsModalOpen(true)
   if (loading || !blog) {
     return (
       <div className="flex justify-center items-center min-h-screen pt-28">
-        <p className="text-lg text-gray-500 animate-pulse">Loading blog post...</p>
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
       </div>
     );
   }

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchEventById, deleteEvent } from "../store/reducers/eventSlice";
 import notify from "../hooks/Notifications";
 import DeleteModal from '../components/confirm/DeleteModal'
+import { ThreeDot } from "react-loading-indicators";
 
 export default function EventData() {
   const nav = useNavigate();
@@ -41,7 +42,7 @@ const handleCancel = () =>{
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen pt-28 px-4">
-        <p className="text-lg text-gray-500 animate-pulse">Loading event data...</p>
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
       </div>
     );
   }

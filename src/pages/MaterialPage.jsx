@@ -5,25 +5,39 @@ import books from '../assets/books.png'
 import block from '../assets/block.png'
 import { useSelector,useDispatch } from "react-redux";
 import { fetchMaterials } from "../store/reducers/materialSlice";
+import { ThreeDot } from "react-loading-indicators";
 
 
-const semesters =["All", "Semester 1", "Semester 2", "Semester 3", "Semester 4", "Semester 5", "Semester 6", "Semester 7", "Semester 8", "Semester 9", "Semester 10",] 
+const semesters =["Semester","All", "Semester 1", "Semester 2", "Semester 3", "Semester 4", "Semester 5", "Semester 6", "Semester 7", "Semester 8", "Semester 9", "Semester 10",] 
 
 
 export default function MaterialPage() {
-  const materialsData = useSelector((state)=>state?.material?.materials?.date)
+  const materialsData = useSelector((state)=>state?.material?.materials)
+  const loading = useSelector((state)=>state?.material?.loading)
   const dispatch = useDispatch()
   useEffect(()=>{
 dispatch(fetchMaterials())
-
   },[dispatch])
   const [selectedSemester, setSelectedSemester] = useState("All");
   const [selectedDepartment, setSelectedDepartment] = useState("All");
 
-  const filteredMaterials = materialsData?.filter(material =>
-    (selectedSemester === "All" || material.semester === selectedSemester) &&
+  const filteredMaterials = materialsData?.filter((material =>
+    {
+      return (
+        (selectedSemester === "All" || material.semester === selectedSemester) &&
     (selectedDepartment === "All" || material.department === selectedDepartment)
+      )
+    })
   );
+
+if(loading){
+      return (
+      <div className="flex w-full justify-center items-center min-h-screen pt-28">
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
+      </div>
+    );
+}
+
 
   return (
     <div className="min-h-screen w-full container mx-auto pt-28">
@@ -51,22 +65,36 @@ className="whitespace-nowrap">Add Material</Link>
         <select
           className="px-4 py-2 border rounded-lg bg-gray-100"
           onChange={(e) => setSelectedSemester(e.target.value)}
+          defaultValue="Semester"
         >
-            {semesters.map((ele,index)=>{
-                return (
-                    <option key={index} value={ele} className="h-1">{ele}</option>
-                )
-            })}
+            {semesters.map((ele, index) => {
+  if (ele === "Semester") {
+    return (
+      <option key={index} value={ele} className="h-1" disabled>
+        {ele}
+      </option>
+    );
+  } else {
+    return (
+      <option key={index} value={ele} className="h-1">
+        {ele}
+      </option>
+    );
+  }
+})}
+
         </select>
 
         <select
           className="px-4 py-2 border rounded-lg bg-gray-100"
           onChange={(e) => setSelectedDepartment(e.target.value)}
+          defaultValue=""
         >
+          <option value="" disabled>Department</option>
           <option value="All">All</option>
-          <option value="CS">Computer Science</option>
-          <option value="AI">Artificial Intelligence</option>
-          <option value="IT">Information Technology</option>
+          <option value="Computer Science">Computer Science</option>
+          <option value="Artificial Intelligence">Artificial Intelligence</option>
+          <option value="Information Technology">Information Technology</option>
         </select>
       </div>
 

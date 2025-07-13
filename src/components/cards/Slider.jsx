@@ -5,10 +5,12 @@ import { faFacebook, faInstagram, faXTwitter } from "@fortawesome/free-brands-sv
 import { useSelector,useDispatch } from "react-redux";
 import { fetchBanners } from "../../store/reducers/bannerSlice";
 import { Link } from "react-router-dom";
+import { ThreeDot } from "react-loading-indicators";
 
 
 export default function Slider() {
   const post = useSelector((state)=>state.banner.banners)
+  const loading = useSelector((state)=>state.banner?.loading)
   const dispatch = useDispatch()
   useEffect(()=>{
 dispatch(fetchBanners())
@@ -37,6 +39,15 @@ dispatch(fetchBanners())
     return url.startsWith("http") ? url : `https://${url}`;
   };
   
+
+  if(loading){
+          return (
+      <div className="min-h-screen w-full flex justify-center items-center">
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col">
     <div className="mt-12 flex flex-col sm:flex-row sm:justify-between items-center sm:relative">

@@ -3,11 +3,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { registerAdmin } from "../store/reducers/authSlice"; 
 import notify from "../hooks/Notifications";
+import { FaSpinner } from "react-icons/fa";
 
 export default function RegisterAdminPage() {
   const admim = useSelector((state) => state.auth.admim);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+
 
   const [formData, setFormData] = useState({
     name: "",
@@ -31,8 +34,10 @@ export default function RegisterAdminPage() {
     setSuccess("");
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, { setSubmitting }) => {
     e.preventDefault();
+        setLoading(true);
+
 
     try {
 
@@ -49,6 +54,9 @@ export default function RegisterAdminPage() {
       setFormData({ name: "", title: "", email: "", password: "" });
     } catch (err) {
       notify("Registration failed.", "error")
+    }finally {
+      setSubmitting(false);
+      setLoading(false);
     }
   };
 
@@ -94,9 +102,14 @@ export default function RegisterAdminPage() {
           />
           <button
             type="submit"
+            disabled={loading}
             className="w-full bg-customBlue3 text-white py-3 rounded-lg hover:bg-customBlue2"
           >
-            Register Admin
+            {loading ? (
+                            <FaSpinner className="animate-spin text-xl" />
+                          ) : (
+                            "Register Admin"
+                          )}
           </button>
         </form>
       </div>

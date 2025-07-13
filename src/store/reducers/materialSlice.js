@@ -57,7 +57,7 @@ export const materialSlice = createSlice({
         })
         .addCase(fetchMaterials.fulfilled, (state, action)=>{
             state.loading = false;
-            state.materials = action.payload?.data;
+            state.materials = action.payload?.data.date;
         })
         .addCase(fetchMaterials.rejected, (state, action)=>{
             state.loading = false;

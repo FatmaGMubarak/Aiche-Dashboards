@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchEvents } from '../../store/reducers/eventSlice';
+import { ThreeDot } from 'react-loading-indicators';
 export default function EventCard() {
   const events = useSelector((state) => state.event?.events);
   const loading = useSelector((state) => state.event?.loading);
@@ -19,7 +20,7 @@ export default function EventCard() {
   if (loading) {
     return (
       <div className="max-w-5xl mx-auto px-5  flex justify-center items-start">
-        <p className="text-lg text-gray-500 animate-pulse">Loading events...</p>
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
       </div>
     );
   }

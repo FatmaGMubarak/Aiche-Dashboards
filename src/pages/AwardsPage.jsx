@@ -4,83 +4,11 @@ import { Link } from 'react-router-dom';
 import { useState,useEffect } from 'react';
 import { fetchAwards } from '../store/reducers/awardSlice';
 import { useSelector,useDispatch } from 'react-redux';
-// const awards = [
-//   {
-//     id: 1,
-//     title: "Best Volunteer of the Year",
-//     date: "April 15, 2024",
-//     description: "Awarded to the student who contributed the most to community service.",
-//   },
-//   {
-//     id: 2,
-//     title: "Innovator Award",
-//     date: "June 10, 2024",
-//     description: "Recognizing students who developed impactful tech projects.",
-//   },
-//   {
-//     id: 3,
-//     title: "Leadership Excellence",
-//     date: "August 5, 2024",
-//     description: "For outstanding leadership in student activities and organizations.",
-//   },
-//   {
-//     id: 4,
-//     title: "Leadership Excellence",
-//     date: "August 5, 2024",
-//     description: "For outstanding leadership in student activities and organizations.",
-//   },
-//   {
-//     id: 5,
-//     title: "Leadership Excellence",
-//     date: "August 5, 2024",
-//     description: "For outstanding leadership in student activities and organizations.",
-//   },
-//   {
-//     id: 6,
-//     title: "Leadership Excellence",
-//     date: "August 5, 2024",
-//     description: "For outstanding leadership in student activities and organizations.",
-//   },
-//   {
-//     id: 7,
-//     title: "Leadership Excellence",
-//     date: "August 5, 2024",
-//     description: "For outstanding leadership in student activities and organizations.",
-//   },
-//   {
-//     id: 8,
-//     title: "Leadership Excellence",
-//     date: "August 5, 2024",
-//     description: "For outstanding leadership in student activities and organizations.",
-//   },
-//   {
-//     id: 9,
-//     title: "Leadership Excellence",
-//     date: "August 5, 2024",
-//     description: "For outstanding leadership in student activities and organizations.",
-//   },
-//   {
-//     id: 10,
-//     title: "Leadership Excellence",
-//     date: "August 5, 2024",
-//     description: "For outstanding leadership in student activities and organizations.",
-//   },
-//   {
-//     id: 11,
-//     title: "Leadership Excellence",
-//     date: "August 5, 2024",
-//     description: "For outstanding leadership in student activities and organizations.",
-//   },
-//   {
-//     id: 12,
-//     title: "Leadership Excellence",
-//     date: "August 5, 2024",
-//     description: "For outstanding leadership in student activities and organizations.",
-//   },
-// ];
+import { ThreeDot } from 'react-loading-indicators';
 
 export default function AwardsPage() {
   const awards = useSelector((state)=>state.award?.awards)
+  const loading = useSelector((state)=>state.award?.loading)
   const dispatch = useDispatch()
   useEffect(()=>{
 dispatch(fetchAwards())
@@ -93,6 +21,15 @@ dispatch(fetchAwards())
     const handleViewLess = () =>{
         setVisible((prev)=>prev > 9 ?prev - 9 :prev)
     }
+
+    if(loading){
+      return (
+      <div className="min-h-screen w-full flex justify-center items-center">
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
+      </div>
+    );
+    }
+
   return (
     <div className="min-h-screen w-full">
       <div className="relative w-full h-[50vh] flex items-center justify-center text-white">
@@ -110,7 +47,7 @@ dispatch(fetchAwards())
       <div className="container mx-auto px-6 pb-12">
         <div className="flex flex-col sm:flex-row sm:justify-between items-center sm:relative">
           <div className="flex justify-center items-center w-full mx-auto">
-        <h2 className="text-3xl font-bold text-center text-customBlue3 mb-8">
+        <h2 className="text-3xl font-bold text-center text-customBlue2 mb-8">
              Awards List</h2>
              </div>
              <div className="flex justify-center sm:justify-end items-center">

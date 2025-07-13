@@ -6,8 +6,10 @@ import { useSelector,useDispatch } from "react-redux";
 import { fetchCommitteeById, deleteCommittee } from "../store/reducers/committeeSlice";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import DeleteModal from '../components/confirm/DeleteModal'
+import { ThreeDot } from "react-loading-indicators";
 export default function BlogPage() {
   const committee = useSelector((state)=>state.committee?.committee)
+    const loading = useSelector((state)=>state.committee.loading)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const dispatch = useDispatch()
   const nav = useNavigate()
@@ -42,7 +44,13 @@ const handleCancel = () =>{
   });
 };
 
-
+  if (loading) {
+    return (
+      <div className="max-w-5xl mx-auto px-5  flex justify-center items-start">
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
+      </div>
+    );
+  }
   return (
     <>
     <DeleteModal

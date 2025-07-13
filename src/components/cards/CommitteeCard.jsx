@@ -4,6 +4,7 @@ import session from '../../assets/organization.png'
 import { useSelector,useDispatch } from "react-redux";
 import { fetchCommittee } from "../../store/reducers/committeeSlice";
 import task from "../../assets/task-done.png"
+import { ThreeDot } from "react-loading-indicators";
 
 export default function CommitteeCard() {
   const {id} = useParams()
@@ -26,7 +27,7 @@ const handleViewLess = () =>{
   if (loading) {
     return (
       <div className="max-w-5xl mx-auto px-5  flex justify-center items-start">
-        <p className="text-lg text-gray-500 animate-pulse">Loading committees...</p>
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
       </div>
     );
   }
