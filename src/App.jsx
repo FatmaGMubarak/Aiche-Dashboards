@@ -47,12 +47,12 @@ function AppContent() {
     <>
                     <ToastContainer position="top-right" autoClose={3000} />
 
-<div className="flex h-screen">
+<div className="flex h-screen w-full">
         {showNavbar && <NavBar auth={auth} />}
 
       <Routes>
 
-        <Route index element={<LoginPage />} />
+        <Route index element={<LoginPage />} path="/" />
         <Route path="/register" element={<RegisterAdminPage />} />
         <Route path="/assign" element={<AdminAssignmentPage />} />
         <Route path="/dashboard" element={<Dashboard />} />

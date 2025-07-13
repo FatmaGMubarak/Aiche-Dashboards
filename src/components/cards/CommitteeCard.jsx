@@ -37,11 +37,12 @@ const handleViewLess = () =>{
   <div className="w-full max-w-7xl grid gap-6 sm:grid-cols-2 md:grid-cols-3 px-5">
     {committees?.slice(0, visible).map((ele) => (
       <div
-      role="button"
-      tabIndex={0}
+      // role="button"
+      // tabIndex={0}
       onClick={()=>{
         nav(`/committee-data/${ele?.id}`)
       }}
+      to={`/committee-data/${ele?.id}`}
         key={ele.id}
         className="bg-white border border-gray-200 rounded-xl shadow-md hover:shadow-lg transition-transform transform hover:scale-105 overflow-hidden flex flex-col h-[400px]"
       >
@@ -57,20 +58,28 @@ const handleViewLess = () =>{
           </div>
 
           <div className="flex justify-between mt-6">
-            <Link
-              to={`/committees/${ele?.id}/session-page`}
+            <button
+              onClick={(e)=>{
+                    e.stopPropagation();
+    e.preventDefault();
+                nav(`/committees/${ele?.id}/session-page`)
+              }}
               className="inline-flex items-center gap-2 px-4 py-1.5 bg-customBlue3 text-white text-sm font-medium rounded-lg hover:bg-customBlue2"
             >
               <img src={session} alt="session" className="w-5 h-5" />
               Sessions
-            </Link>
-            <Link
-              to={`/committees/${ele?.id}/task-page`}
+            </button>
+            <button
+              onClick={(e)=>{
+                    e.stopPropagation();
+    e.preventDefault();
+                nav(`/committees/${ele?.id}/task-page`)
+              }}
               className="inline-flex items-center gap-2 px-4 py-1.5 bg-customBlue3 text-white text-sm font-medium rounded-lg hover:bg-customBlue2"
             >
               <img src={task} alt="task" className="w-5 h-5" />
               Tasks
-            </Link>
+            </button>
           </div>
         </div>
       </div>

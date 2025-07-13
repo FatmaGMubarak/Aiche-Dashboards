@@ -5,9 +5,12 @@ import { Link } from 'react-router-dom'
 import { fetchSessions, deleteSession } from '../../store/reducers/sessionSlice'
 import DeleteModal from '../../components/confirm/DeleteModal'
 import notify from '../../hooks/Notifications'
+import { ThreeDot } from 'react-loading-indicators'
 
 export default function SessionCard() {
-  const sessions = useSelector((state)=>state.session.sessions)
+  const sessions = useSelector((state)=>state.session?.sessions)
+
+  const loading = useSelector((state)=>state.session.loading)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [sessionToDelete, setSessionToDelete] = useState(null)
   const dispatch = useDispatch()
@@ -18,6 +21,10 @@ export default function SessionCard() {
 useEffect(()=>{
 dispatch(fetchSessions())
 },[dispatch])
+
+    const filteredSessions = sessions.filter((session)=>session.committee?.id?.toString() === committeeId?.toString())
+console.log(filteredSessions)
+
  
 const handleDelete = (id) =>{
   setSessionToDelete(id)
@@ -43,6 +50,17 @@ const handleConfirm = () =>{
 setIsModalOpen(false)
                               
 }
+
+if(loading){
+      return (
+      <div className="max-w-5xl mx-auto px-5  flex justify-center items-start">
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
+      </div>
+    );
+}
+
+if (!sessions.length) return <p className="text-center text-lg">no sessions available.</p>;
+
 
     return (
       <>
@@ -105,7 +123,7 @@ setIsModalOpen(false)
   )}
 
 
-  {visible < sessions.length && (
+  {visible < filteredSessions.length && (
     <div className="flex justify-end items-center w-full">
     <button 
       onClick={handleViewMore} 

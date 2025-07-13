@@ -4,26 +4,24 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchTasks, deleteTask } from '../../store/reducers/taskSlice';
 import DeleteModal from '../../components/confirm/DeleteModal'
 import notify from '../../hooks/Notifications';
+import { ThreeDot } from 'react-loading-indicators';
 export default function TaskCard() {
   const dispatch = useDispatch();
-  const nav = useNavigate();
   const { id: committeeId } = useParams(); 
-const tasks = useSelector((state) => state.task?.tasks || []);
-const task = useSelector((state)=>state.tasks?.task)
+const tasks = useSelector((state) => state.task?.tasks);
+const loading = useSelector((state)=>state.task?.loading)
 const [visible, setVisible] = useState(9);
 const [isModalOpen, setIsModalOpen] = useState(false)
 const [taskToDelete, setTaskToDelete] = useState(null)
 
 useEffect(() => {
   dispatch(fetchTasks());
+  console.log(tasks)
 }, [dispatch]);
 
 const filteredTasks = tasks.filter(
   (task) => task.committee?.id?.toString() === committeeId?.toString()
 );
-
-if (!tasks.length) return <p className="text-center">Loading or no tasks available.</p>;
-
 
   const handleViewMore = () => setVisible((prev) => prev + 9);
   const handleViewLess = () => setVisible((prev) => (prev > 9 ? prev - 9 : prev));
@@ -50,7 +48,17 @@ const handleCancel = () =>{
   setIsModalOpen(false)
 }
   
-  return (
+if(loading){
+      return (
+      <div className="max-w-5xl mx-auto px-5  flex justify-center items-start">
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
+      </div>
+    );
+}
+if (!filteredTasks.length) return <p className="text-center text-lg">no tasks available.</p>;
+
+
+    return (
     <>
     <DeleteModal
     onCancel={handleCancel}
