@@ -37,8 +37,6 @@ const handleViewLess = () =>{
   <div className="w-full max-w-7xl grid gap-6 sm:grid-cols-2 md:grid-cols-3 px-5">
     {committees?.slice(0, visible).map((ele) => (
       <div
-      // role="button"
-      // tabIndex={0}
       onClick={()=>{
         nav(`/committee-data/${ele?.id}`)
       }}

@@ -8,7 +8,7 @@ const dashboardItems = [
   { title: "Materials", path: "/material-page" },
   { title: "Awards", path: "/award-page" },
   { title: "Banners", path: "/slider-page" },
-  { title: "Collections", path: "/task-page" },
+  { title: "Collections", path: "/collection-page" },
   { title: "Register Admin", path: "/register" },
   { title: "Assign Admin", path: "/assign" },
 ];
@@ -16,6 +16,9 @@ const dashboardItems = [
 export default function Dashboard() {
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
+  const token = useSelector((state) => state.auth.token);
+
+console.log(token)
 
   const visibleItems = user?.title === "admim"
     ? dashboardItems

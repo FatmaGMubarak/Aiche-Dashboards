@@ -34,6 +34,9 @@ import RegisterAdminPage from "./pages/RegisterAdminPage";
 import EditTaskForm from "./components/forms/EditTaskForm";
 import EditSessionForm from "./components/forms/EditSessionForm";
 import AdminAssignmentPage from "./pages/AdminAssignmentPage";
+import CollectionPage from "./pages/CollectionPage";
+import CollectionCard from "./components/cards/CollectionCard";
+import CollectionForm from "./components/forms/CollectionForm";
 
 function AppContent() {
   const location = useLocation();
@@ -47,7 +50,7 @@ function AppContent() {
     <>
                     <ToastContainer position="top-right" autoClose={3000} />
 
-<div className="flex h-screen w-full">
+<div className="sm:flex h-screen w-full">
         {showNavbar && <NavBar auth={auth} />}
 
       <Routes>
@@ -78,6 +81,9 @@ function AppContent() {
         <Route path="/award-card/:id" element={<AwardCard />} />
         <Route path="/edit-award-form/:id" element={<EditAwardForm />} />
         <Route path="/slider-form" element={<SliderForm />} />
+        <Route path="/collection-page" element={<CollectionPage />} />
+        <Route path="/collection-card" element={<CollectionCard />} />
+        <Route path="/collection-form" element={<CollectionForm />} />
         <Route path="/event-data/:id" element={<EventData />} />
         <Route path="/edit-committee-form/:id" element={<EditCommitteeForm />} />
         <Route path="/committee-data/:id" element={<CommitteeData />} />

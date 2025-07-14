@@ -43,7 +43,7 @@ const handleConfirm = () =>{
     isOpen={isModalOpen}
     message="Are you sure you want to delete this award?"
     />
-    <div className="flex justify-center items-center min-h-screen pt-28">
+    <div className="flex w-full justify-center items-center min-h-screen pt-28">
         <div className="w-[40vw] h-[30vh]">
             <div key={award?.id} className="bg-white shadow-lg rounded-lg p-6 hover:shadow-2xl transition-all flex flex-col">
                 <div className='flex'>

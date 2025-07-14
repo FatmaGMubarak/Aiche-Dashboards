@@ -103,6 +103,26 @@ export const deleteEvent = createAsyncThunk(
     }
 )
 
+export const updateImage = createAsyncThunk(
+    "EventImage/updateImage",
+    async ({id, formData}, { rejectWithValue , getState})=>{
+        try{
+            const token = getState().auth.token;
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+  
+        const response = await api.post(`/api/EventImage/${id}`, formData, config);
+        return response.data;
+
+      } catch (error) {
+        return rejectWithValue(error.response?.data || error.message);
+      }
+    }
+  );
+
 export const deleteImage = createAsyncThunk(
     "EventImage/deleteImage",
     async (imgId, { rejectWithValue , getState})=>{
@@ -115,7 +135,7 @@ export const deleteImage = createAsyncThunk(
         };
   
         const response = await api.delete(`/api/EventImage/${imgId}`, config);
-        return imgId;
+        return response.data;
 
       } catch (error) {
         return rejectWithValue(error.response?.data || error.message);
@@ -193,10 +213,22 @@ export const eventSlice = createSlice({
         .addCase(deleteImage.fulfilled, (state, action) => {
             state.loading = false;
             const deletedId = action.payload;
-            state.event.image = state.event.image.filter((img) => img.id !== deletedId);
+            state.images = state.images.filter((img) => img.id !== deletedId);
           })
 
         .addCase(deleteImage.rejected, (state, action)=>{
+            state.loading = false;
+            state.error = action.payload;
+        })
+        .addCase(updateImage.pending, (state)=>{
+            state.loading = true;
+            state.error = null;
+        })
+        .addCase(updateImage.fulfilled, (state) => {
+            state.loading = false;
+          })
+
+        .addCase(updateImage.rejected, (state, action)=>{
             state.loading = false;
             state.error = action.payload;
         })

@@ -60,7 +60,7 @@ setIsModalOpen(true)
     isOpen={isModalOpen}
 message="Are you sure you want to delete this blog?"
 />
-    <div className="flex justify-center items-center min-h-screen pt-28">
+    <div className="flex w-full justify-center items-center min-h-screen pt-28">
       <div className="relative w-[90%] sm:max-w-6xl flex flex-col lg:flex-row bg-white shadow-2xl hover:shadow-3xl hover:bg-gray-100 transition-all duration-300 h-[80vh] sm:h-[500px] md:h-[80vh] rounded-lg overflow-hidden">
         <img
           className="w-full lg:w-[40%] h-[50%] lg:h-full lg:object-cover"

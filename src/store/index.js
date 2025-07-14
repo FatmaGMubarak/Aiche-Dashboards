@@ -9,6 +9,7 @@ import  committeeSlice  from './reducers/committeeSlice';
 import  bannerSlice  from './reducers/bannerSlice';
 import  taskSlice  from './reducers/taskSlice';
 import  sessionSlice  from './reducers/sessionSlice';
+import  collectionSlice  from './reducers/collectionSlice';
 const store = configureStore(
     {
         reducer:{
@@ -21,7 +22,8 @@ const store = configureStore(
             committee:committeeSlice,
             banner: bannerSlice,
             task:taskSlice,
-            session:sessionSlice
+            session:sessionSlice,
+            collection:collectionSlice,
         }
 
     }

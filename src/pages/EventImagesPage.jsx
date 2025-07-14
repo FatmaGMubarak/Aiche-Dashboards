@@ -1,26 +1,45 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchEventById, deleteImage } from "../store/reducers/eventSlice";
+import { fetchEventById, deleteImage, updateImage } from "../store/reducers/eventSlice";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import notify from "../hooks/Notifications";
+import DeleteModal from "../components/confirm/DeleteModal";
+import { ThreeDot } from "react-loading-indicators";
 
 export default function EventImagesPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const initialEvents = useSelector((state) => state.event?.event);
-  const eventImages = useSelector((state)=>state.event?.event?.image)
+  const loading = useSelector((state) => state.event?.loading);
   const [events, setEvents] = useState(initialEvents);
   const [tempEvents, setTempEvents] = useState(initialEvents);
   const [isEditing, setIsEditing] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [imageToDelete, setImageToDelete] = useState(null)
+  const nav = useNavigate()
 
   const handleDeleteImage = (imageId) => {
-    dispatch(deleteImage(imageId));
+    setImageToDelete(imageId)
+    setIsModalOpen(true)
   };
+
+  const handleModalCancel = () =>{
+    setIsModalOpen(false)
+  }
+
+  const handleModalConfirm = () =>{
+    dispatch(deleteImage(imageToDelete));
+  notify("You deleted this image successfully", "success")
+  nav("/event-page")
+  }
 
   useEffect(() => {
     if (id) {
       dispatch(fetchEventById(id));
+      
     }
+    console.log(tempEvents)
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -32,7 +51,7 @@ export default function EventImagesPage() {
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
-    const newImages = files.map((file) => ({
+    const newImages = files?.map((file) => ({
       file,
       preview: URL.createObjectURL(file),
     }));
@@ -54,16 +73,17 @@ export default function EventImagesPage() {
 
     event.image.forEach((imgObj) => {
       if (imgObj.file) {
-        formData.append("images", imgObj.file);
+        formData.append("image", imgObj.file);
       }
     });
 
     try {
-      // await axios.post(`/api/events/${id}/upload-images`, formData, {
-      //   headers: {
-      //     "Content-Type": "multipart/form-data",
-      //   },
-      // });
+       const result = await dispatch(updateImage({id, formData})).unwrap()
+             console.log(result)
+             if(result){
+       nav("/event-page")
+             }
+
       alert("Images uploaded successfully!");
       setIsEditing(false);
     } catch (err) {
@@ -77,7 +97,31 @@ export default function EventImagesPage() {
     setIsEditing(false);
   };
 
+if (loading){
   return (
+      <div className="min-h-screen w-full flex justify-center items-center">
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
+      </div>
+  )
+}
+
+if (!tempEvents[0]?.image?.length) {
+  return (
+          <div className="min-h-screen w-full flex justify-center items-center">
+        <p className="text-center text-lg">no images to preview.</p>
+
+      </div>
+  )
+}
+
+  return (
+    <>
+    <DeleteModal
+    onCancel={handleModalCancel}
+    onConfirm={handleModalConfirm}
+    isOpen={isModalOpen}
+    message="Are you sure you want to delete this image?"
+    />
     <div className="w-full min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-200 pt-28 px-5">
       <div className="flex flex-col sm:flex-row sm:justify-between items-center sm:relative">
         <div className="flex justify-center items-center w-full mx-auto">
@@ -87,7 +131,7 @@ export default function EventImagesPage() {
         </div>
         <div className="flex justify-center sm:justify-end items-center">
           <label
-            htmlFor="imageUpload"
+            htmlFor="image"
             className="flex items-center gap-2 text-white bg-customBlue3 hover:bg-customBlue2 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 sm:absolute sm:right-12 cursor-pointer"
           >
             <svg
@@ -106,7 +150,8 @@ export default function EventImagesPage() {
             </svg>
             Add Image
             <input
-              id="imageUpload"
+              id="image"
+              name="image"
               type="file"
               accept="image/*"
               multiple
@@ -128,21 +173,23 @@ export default function EventImagesPage() {
             </h2>
             <p className="text-gray-600">{tempEvents[0].description}</p>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {tempEvents[0].image.map((img) => (
-  <div key={img?.id} className="relative group">
-    <img
-      src={img.preview || img.image_path}
-      alt={`Event Image ${img.id + 1}`}
-      className="rounded-lg w-full h-48 object-cover shadow-md group-hover:opacity-75 transition"
-    />
-    <button
-    onClick={()=>handleDeleteImage(img?.id)}
-      className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700 transition-opacity opacity-0 group-hover:opacity-100"
-    >
-      ✕
-    </button>
-  </div>
+           {tempEvents[0]?.image?.length > 0 &&
+  tempEvents[0].image.map((img, index) => (
+    <div key={tempEvents[0].id || index} className="relative group">
+      <img
+        src={img.preview || img.image_path}
+        alt={`Event Image ${img.id || index}`}
+        className="rounded-lg w-full h-48 object-cover shadow-md group-hover:opacity-75 transition"
+      />
+      <button
+        onClick={() => handleDeleteImage(img?.id)}
+        className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700 transition-opacity opacity-0 group-hover:opacity-100"
+      >
+        ✕
+      </button>
+    </div>
 ))}
+
             </div>
           </div>
         )}
@@ -165,5 +212,6 @@ export default function EventImagesPage() {
         </div>
       )}
     </div>
+    </>
   );
 }

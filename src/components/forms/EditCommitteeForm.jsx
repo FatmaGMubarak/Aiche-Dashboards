@@ -55,9 +55,9 @@ useEffect(() => {
       const formData = new FormData();
       formData.append("name", values.name);
       formData.append("description", values.description);
-      if (values.img) {
+      
         formData.append("img", values.img);
-      }
+      
       const result = await dispatch(updateCommittee({id, newCommitteeData: formData})).unwrap()
       if(result){
         nav("/committee-page")
@@ -145,7 +145,7 @@ useEffect(() => {
               type="file"
               id="img"
               name="img"
-              accept="img/*"
+              accept="image/*"
               className="hidden"
               onChange={handleimgUpload}
               onBlur={formik.handleBlur}

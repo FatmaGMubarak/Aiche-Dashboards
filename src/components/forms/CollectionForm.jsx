@@ -1,83 +1,64 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useFormik } from "formik";
 import notify from "../../hooks/Notifications";
 import * as Yup from "yup";
-import { useSelector,useDispatch } from "react-redux";
-import {fetchBlogById, updateBlog} from "../../store/reducers/blogSlice"
-import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { createCollection } from "../../store/reducers/collectionSlice";
 
-export default function EditBlogForm() {
-    const {id} = useParams()
+export default function CollectionForm() {
+  const token = useSelector((state)=>state.auth.token)
   const nav = useNavigate()
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-  const blog = useSelector((state)=>state.blog?.blog)
-  const admin = ["Admin 1", "Admin 2", "Admin 3", "Admin 4", "Admin 5", "Admin 6", "Admin 7","Admin 8"]
-useEffect(()=>{
-    if(id){
-        dispatch(fetchBlogById(id))
-    }
-},[dispatch, id])
 
-useEffect(() => {
-    if (blog) {
-      formik.setValues({
-        title: blog?.title || "",
-        description: blog?.description || "",
-        image: blog?.image || null,
-      });
-      setSelectedImage(blog.image);
-      console.log(blog.image)
-    }
-  }, [blog]);
   const validationSchema = Yup.object({
-  title: Yup.string()
-    .required("Title is required")
-    .min(2, "Title must be at least 2 characters")
-    .max(50, "Title must be at most 50 characters"),
-
-  description: Yup.string()
-    .required("Description is required")
-    .min(2, "Description must be at least 2 characters")
-    .max(200, "Description must be at most 200 characters"),
-
-  image: Yup.mixed()
-    .required("Image is required")
-    .test(
-      "fileSize",
-      "Max image size is 2MB",
-      (value) =>
-        !value ||
-        typeof value === "string" ||
-        value.size <= 2000000
-    )
-    .test(
-      "fileType",
-      "Unsupported file type",
-      (value) =>
-        !value ||
-        typeof value === "string" ||
-        ["image/jpg", "image/jpeg", "image/png"].includes(value.type)
-    ),
-});
-
+    name: Yup.string()
+      .min(2, "Name must be at least 2 characters")
+      .max(50, "Name must be at most 50 characters")
+      .required("*Name is required"),
+    description: Yup.string()
+      .min(2, "Description must be at least 2 characters")
+      .max(200, "Description must be at most 200 characters")
+      .required("*Description is required"),
+    total: Yup.string()
+      .required("*Description is required"),
+    image: Yup.mixed()
+      .nullable()
+      .test(
+        "fileSize",
+        "Max image size is 2MB",
+        (value) => !value || value.size <= 2000000
+      )
+      .test(
+        "fileType",
+        "Unsupported file type",
+        (value) =>
+          !value ||
+          ["image/jpg", "image/jpeg", "image/png"].includes(value.type)
+      ),
+  });
 
   const handleSubmit = async (values, { setSubmitting }) => {
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append("title", values.title);
+      formData.append("name", values.name);
       formData.append("description", values.description);
-       
-      formData.append("image", values.image);
-    
-      const result = await dispatch(updateBlog({id, newBlogData:formData})).unwrap()
+      formData.append("total", values.total);
+      if (values.image) {
+        formData.append("image", values.image);
+      }
+      console.log(token)
+
+      const result = await dispatch(createCollection(formData)).unwrap()
       if(result){
-        nav("/blog-home")
+        notify("Your collection is added successfully", "success")
+        nav("/collection-page")
       }
 
-    }catch (error) {
+    } catch (error) {
   const err = error;
 
   if (Array.isArray(err)) {
@@ -98,8 +79,9 @@ useEffect(() => {
 
   const formik = useFormik({
     initialValues: {
-      title: "",
+      name: "",
       description: "",
+      total: "",
       image: null,
     },
     validationSchema,
@@ -112,9 +94,10 @@ useEffect(() => {
       const imageUrl = URL.createObjectURL(file);
       setSelectedImage(imageUrl);
       formik.setFieldValue("image", file);
+    } else {
+      formik.setFieldValue("image", null);
     }
   };
-
 
   return (
     <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-10 pb-0 pt-16">
@@ -161,8 +144,6 @@ useEffect(() => {
               accept="image/*"
               className="hidden"
               onChange={handleImageUpload}
-              onBlur={formik.handleBlur}
-
             />
           </label>
           {formik.errors.image && formik.touched.image && (
@@ -175,22 +156,22 @@ useEffect(() => {
         <div className="flex flex-col w-full md:w-2/3 gap-6">
           <div>
             <label
-              htmlFor="title"
+              htmlFor="name"
               className="block text-sm font-semibold text-gray-700 mb-1"
             >
-              title
+              Name
             </label>
             <input
               type="text"
-              id="title"
-              name="title"
+              id="name"
+              name="name"
               className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-customBlue3"
-              value={formik.values.title}
+              value={formik.values.name}
               onChange={formik.handleChange}
             />
-            {formik.errors.title && formik.touched.title && (
+            {formik.errors.name && formik.touched.name && (
               <p className="text-red-500 text-sm mt-1">
-                {formik.errors.title}
+                {formik.errors.name}
               </p>
             )}
           </div>
@@ -200,7 +181,7 @@ useEffect(() => {
               htmlFor="description"
               className="block text-sm font-semibold text-gray-700 mb-1"
             >
-              description
+              Description
             </label>
             <textarea
               id="description"
@@ -216,27 +197,29 @@ useEffect(() => {
               </p>
             )}
           </div>
-
-            {/* <div>
+          <div>
             <label
-    htmlFor="countries"
-    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-  >
-    Created By:
-  </label>
-  <select
-    id="countries"
-    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-customBlue3 focus:border-customBlue3 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-customBlue3 dark:focus:border-customBlue3"
-  >
-    <option value="">Choose an admin</option>
-            {admin.map((ele, index)=>{
-              return(
-                <option value="US" key={index}>{ele}</option>
+              htmlFor="total"
+              className="block text-sm font-semibold text-gray-700 mb-1"
+            >
+              Total
+            </label>
+            <input
+            type="text"
+              id="total"
+              name="total"
+              className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-customBlue3 resize-none"
+              value={formik.values.total}
+              onChange={formik.handleChange}
+            />
+            {formik.errors.total && formik.touched.total && (
+              <p className="text-red-500 text-sm mt-1">
+                {formik.errors.total}
+              </p>
+            )}
+          </div>
 
-              )
-            })}
-  </select>
-            </div> */}
+
 
 
           <button
@@ -244,7 +227,7 @@ useEffect(() => {
             disabled={loading}
             className="mt-4 w-full mx-auto lg:w-[50%] bg-customBlue3 text-white rounded-md py-2 text-sm font-semibold hover:bg-customBlue2 transition-all disabled:opacity-50"
           >
-            {loading ? "Submitting..." : "Save Changes"}
+            {loading ? "Submitting..." : "Add Collection"}
           </button>
         </div>
       </form>

@@ -122,7 +122,7 @@ nav("/event-page")
   });
 
   return (
-    <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-10 pb-0 pt-16">
+    <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-80 pb-0 pt-16">
       <form
         onSubmit={formik.handleSubmit}
         className="bg-white shadow-xl rounded-2xl w-full max-w-4xl p-8 flex flex-col gap-6"

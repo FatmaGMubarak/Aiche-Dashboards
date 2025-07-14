@@ -41,7 +41,7 @@ const handleCancel = () =>{
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen pt-28 px-4">
+      <div className="flex w-full justify-center items-center min-h-screen pt-28 px-4">
         <ThreeDot color="#05284B" size="medium" text="" textColor="" />
       </div>
     );
