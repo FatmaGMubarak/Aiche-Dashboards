@@ -13,7 +13,7 @@ export default function EditBlogForm() {
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const blog = useSelector((state)=>state.blog?.blog)
-  const admin = ["Admin 1", "Admin 2", "Admin 3", "Admin 4", "Admin 5", "Admin 6", "Admin 7","Admin 8"]
+  // const admin = ["Admin 1", "Admin 2", "Admin 3", "Admin 4", "Admin 5", "Admin 6", "Admin 7","Admin 8"]
 useEffect(()=>{
     if(id){
         dispatch(fetchBlogById(id))

@@ -8,6 +8,7 @@ const dashboardItems = [
   { title: "Materials", path: "/material-page" },
   { title: "Awards", path: "/award-page" },
   { title: "Banners", path: "/slider-page" },
+  { title: "Products", path: "/product-page" },
   { title: "Collections", path: "/collection-page" },
   { title: "Register Admin", path: "/register" },
   { title: "Assign Admin", path: "/assign" },

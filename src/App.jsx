@@ -37,6 +37,11 @@ import AdminAssignmentPage from "./pages/AdminAssignmentPage";
 import CollectionPage from "./pages/CollectionPage";
 import CollectionCard from "./components/cards/CollectionCard";
 import CollectionForm from "./components/forms/CollectionForm";
+import ProductForm from "./components/forms/ProductForm";
+import ProductCard from "./components/cards/ProductCard";
+import ProductPage from "./pages/ProductPage";
+import ProductDetails from "./pages/ProductDetails";
+import EditProductForm from "./components/forms/EditProductForm";
 
 function AppContent() {
   const location = useLocation();
@@ -50,7 +55,7 @@ function AppContent() {
     <>
                     <ToastContainer position="top-right" autoClose={3000} />
 
-<div className="sm:flex h-screen w-full">
+<div>
         {showNavbar && <NavBar auth={auth} />}
 
       <Routes>
@@ -82,13 +87,17 @@ function AppContent() {
         <Route path="/edit-award-form/:id" element={<EditAwardForm />} />
         <Route path="/slider-form" element={<SliderForm />} />
         <Route path="/collection-page" element={<CollectionPage />} />
+        <Route path="/product-page" element={<ProductPage />} />
         <Route path="/collection-card" element={<CollectionCard />} />
+        <Route path="/product-card" element={<ProductCard />} />
         <Route path="/collection-form" element={<CollectionForm />} />
+        <Route path="/product-form" element={<ProductForm />} />
+        <Route path="/edit-product-form/:id" element={<EditProductForm />} />
+        <Route path="/product-detail/:id" element={<ProductDetails />} />
         <Route path="/event-data/:id" element={<EventData />} />
         <Route path="/edit-committee-form/:id" element={<EditCommitteeForm />} />
         <Route path="/committee-data/:id" element={<CommitteeData />} />
         <Route path="/committees/:committeeId/edit-task-form/:taskId" element={<EditTaskForm />} />
-        <Route path="/committees/:committeeId/edit-session-form/:sessionId" element={<EditSessionForm />} />
         <Route path="/committees/:committeeId/edit-session-form/:sessionId" element={<EditSessionForm />} />
       </Routes>
 </div>

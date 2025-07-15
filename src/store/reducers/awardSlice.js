@@ -74,7 +74,7 @@ export const updateAward = createAsyncThunk(
                     Authorization : `Bearer ${token}`
                 }
             }
-            const response = await api.get(`/api/awards/${id}`, newAwardData, config);
+            const response = await api.post(`/api/awards/${id}`, newAwardData, config);
             return response.data
         } catch(error){
             return rejectWithValue(error.response.data || error.message)

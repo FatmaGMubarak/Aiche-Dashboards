@@ -2,15 +2,15 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../api/baseUrl"
 
 const initialState = {
-  committees: [],
-  committee: null,
+  products: [],
+  product: null,
   loading: false,
   error:null,
 };
 
-export const fetchCommittee = createAsyncThunk(
-    "committees/fetchCommittee",
-    async (_, {rejectWithValue, getState})=>{
+export const fetchProducts = createAsyncThunk(
+    "products/fetchProducts",
+    async (_, {getState, rejectWithValue}) => {
         try{
             const token = getState().auth.token;
             const config = {
@@ -18,7 +18,7 @@ export const fetchCommittee = createAsyncThunk(
                   Authorization: `Bearer ${token}`,
                 },
               };
-            const response = await api.get(`/api/committees`, config)
+            const response = await api.get(`/api/products`, config)
             return response.data
         }catch (error){
             return rejectWithValue(error.response?.data || error.message)
@@ -26,8 +26,8 @@ export const fetchCommittee = createAsyncThunk(
     }
 )
 
-export const fetchCommitteeById = createAsyncThunk(
-    "committees/fetchCommitteeById",
+export const fetchProductById = createAsyncThunk(
+    "products/fetchProductById",
     async (id, {rejectWithValue, getState})=>{
         try{
             const token = getState().auth.token;
@@ -36,7 +36,7 @@ export const fetchCommitteeById = createAsyncThunk(
                     Authorization :`Bearer ${token}`,
                 }
             }
-            const response = await api.get(`/api/committees/${id}`, config)
+            const response = await api.get(`/api/products/${id}`, config)
             return response.data
         }catch(error){
             return rejectWithValue (error.response?.data || error.message)
@@ -44,9 +44,9 @@ export const fetchCommitteeById = createAsyncThunk(
     }
 )
 
-export const createCommittee = createAsyncThunk(
-    "/committees/createCommittee",
-    async (committeeData,{rejectWithValue, getState})=>{
+export const createProduct = createAsyncThunk(
+    "/products/createProduct",
+    async (productData,{rejectWithValue, getState})=>{
         try{
             const token = getState().auth.token;
             const config = {
@@ -54,17 +54,17 @@ export const createCommittee = createAsyncThunk(
                     Authorization: `Bearer ${token}`
                 }
             }
-            const response = await api.post(`/api/committees`, committeeData, config)
-            return response?.data
+            const response = await api.post(`/api/products`, productData, config)
+            return response.data
         }catch(error){
             return rejectWithValue(error.response?.data || error.message)
         }
     }
 )
 
-export const updateCommittee = createAsyncThunk(
-    "/committees/updateCommittee",
-    async({id, newCommitteeData}, {rejectWithValue, getState})=>{
+export const updateProduct = createAsyncThunk(
+    "/products/updateProduct",
+    async({id, newproductData}, {rejectWithValue, getState})=>{
         try{
             const token = getState().auth.token;
             const config = {
@@ -73,15 +73,15 @@ export const updateCommittee = createAsyncThunk(
                     Authorization : `Bearer ${token}`
                 }
             }
-            const response = await api.post(`/api/committees/${id}`, newCommitteeData, config);
+            const response = await api.post(`/api/products/${id}`, newproductData, config);
             return response.data
         } catch(error){
             return rejectWithValue(error.response.data || error.message)
         }
     }
 )
-export const deleteCommittee = createAsyncThunk(
-    "/committees/deleteCommittee",
+export const deleteProduct = createAsyncThunk(
+    "/products/deleteProduct",
     async(id, {rejectWithValue, getState})=>{
         try{
             const token = getState().auth.token;
@@ -91,82 +91,82 @@ export const deleteCommittee = createAsyncThunk(
                     Authorization : `Bearer ${token}`
                 }
             }
-            const response = await api.delete(`/api/committees/${id}`, config);
-            return response.data
+             await api.delete(`/api/products/${id}`, config);
+            return id
         } catch(error){
             return rejectWithValue(error.response.data || error.message)
         }
     }
 )
 
-export const committeeSlice = createSlice({
-  name: 'committee',
+export const productSlice = createSlice({
+  name: 'product',
   initialState,
   reducers: {
     },
 extraReducers: (builder) =>{
     builder
-    .addCase(fetchCommittee.pending, (state)=> {
+    .addCase(fetchProducts.pending, (state)=> {
         state.loading = true;
         state.error = null;
     })
-    .addCase(fetchCommittee.fulfilled, (state, action)=>{
+    .addCase(fetchProducts.fulfilled, (state, action)=>{
         state.loading = false;
-        state.committees = action?.payload?.data;
+        state.products = action?.payload?.data;
     })
-    .addCase(fetchCommittee.rejected, (state, action)=>{
+    .addCase(fetchProducts.rejected, (state, action)=>{
         state.loading = false;
         state.error = action.payload
     })
-    .addCase(fetchCommitteeById.pending, (state)=>{
+    .addCase(fetchProductById.pending, (state)=>{
         state.loading = true;
         state.error = null
     })
-    .addCase(fetchCommitteeById.fulfilled, (state, action)=>{
+    .addCase(fetchProductById.fulfilled, (state, action)=>{
         state.loading = false
-        state.committee = action?.payload?.data
+        state.product = action?.payload?.data
     })
-    .addCase(fetchCommitteeById.rejected, (state, action)=>{
+    .addCase(fetchProductById.rejected, (state, action)=>{
         state.loading = false
         state.error = action.payload
     })
-    .addCase(createCommittee.pending, (state)=>{
+    .addCase(createProduct.pending, (state)=>{
         state.loading = true;
         state.error = null
     })
-    .addCase(createCommittee.fulfilled, (state, action)=>{
+    .addCase(createProduct.fulfilled, (state, action)=>{
         state.loading = false;
-        state.committees.push(action?.payload?.data)
+        state.products.push(action?.payload?.data)
     })
-    .addCase(createCommittee.rejected, (state, action)=>{
+    .addCase(createProduct.rejected, (state, action)=>{
         state.loading = false;
         state.error = action.payload;
     })
-    .addCase(updateCommittee.pending, (state)=>{
+    .addCase(updateProduct.pending, (state)=>{
         state.loading = true;
         state.error = null;
     })
-    .addCase(updateCommittee.fulfilled, (state)=>{
+    .addCase(updateProduct.fulfilled, (state)=>{
         state.loading = false;
     })
-    .addCase(updateCommittee.rejected, (state, action)=>{
+    .addCase(updateProduct.rejected, (state, action)=>{
         state.loading = false;
         state.error = action.payload
     })
-    .addCase(deleteCommittee.pending, (state)=>{
+    .addCase(deleteProduct.pending, (state)=>{
         state.loading = true;
         state.error = null;
     })
-    .addCase(deleteCommittee.fulfilled, (state, action)=>{
+    .addCase(deleteProduct.fulfilled, (state, action)=>{
         state.loading = false;
-        state.committees = state.committees.filter((selected)=>selected.id !== action.meta.arg)
+        state.products = state.products.filter((selected)=>selected.id != action.payload)
     })
-    .addCase(deleteCommittee.rejected, (state, action)=>{
+    .addCase(deleteProduct.rejected, (state, action)=>{
         state.loading = false;
-        state.error = action.payload
+        state.error = action.payload;
     })
 }
 })
 
 
-export default committeeSlice.reducer
+export default productSlice.reducer

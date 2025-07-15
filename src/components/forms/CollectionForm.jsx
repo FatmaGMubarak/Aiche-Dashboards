@@ -3,8 +3,9 @@ import { useFormik } from "formik";
 import notify from "../../hooks/Notifications";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { createCollection } from "../../store/reducers/collectionSlice";
+import { useLocation } from "react-router-dom";
 
 export default function CollectionForm() {
   const token = useSelector((state)=>state.auth.token)
@@ -12,6 +13,8 @@ export default function CollectionForm() {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const location = useLocation()
+  // const productId = location.state.productId;
 
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -47,6 +50,7 @@ export default function CollectionForm() {
       formData.append("name", values.name);
       formData.append("description", values.description);
       formData.append("total", values.total);
+      // formData.append("total", values.total);
       if (values.image) {
         formData.append("image", values.image);
       }

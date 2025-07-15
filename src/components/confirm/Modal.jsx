@@ -9,7 +9,7 @@ export default function Modal({ heading, message, onConfirm, onCancel, isOpen })
 
   return (
        <div className="w-full min-h-screen fixed inset-0 flex flex-col justify-center items-center z-50 bg-black bg-opacity-50  text-center">
-            <div className="bg-white w-[30%] p-6 rounded-lg">
+            <div className="bg-white w-[70%] sm:w-[30%] p-6 rounded-lg">
                 <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
             <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
               {heading}

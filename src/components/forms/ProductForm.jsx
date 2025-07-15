@@ -1,53 +1,40 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useFormik } from "formik";
 import notify from "../../hooks/Notifications";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import { updateCommittee, fetchCommitteeById } from "../../store/reducers/committeeSlice";
+import { useNavigate } from "react-router-dom";
+import { createProduct } from "../../store/reducers/productSlice";
 
-export default function EditCommitteeForm() {
-  const {id} = useParams()
+export default function ProductForm() {
+  const token = useSelector((state)=>state.auth.token)
   const nav = useNavigate()
   const dispatch = useDispatch()
-  const committee = useSelector((state)=>state.committee?.committee)
   const [loading, setLoading] = useState(false);
-  const [selectedimg, setSelectedimg] = useState(null);
-useEffect(()=>{
-    if(id){
-        dispatch(fetchCommitteeById(id))
-        console.log(committee.img)
-    }
-},[dispatch, id])
-useEffect(() => {
-    if (committee) {
-      formik.setValues({
-        name: committee?.name || "",
-        description: committee?.description || "",
-        img: committee?.img || null,
-      });
-      setSelectedimg(committee.img);
-    }
-  }, [committee]);
+  const [selectedImage, setSelectedImage] = useState(null);
+
   const validationSchema = Yup.object({
     name: Yup.string()
-      .min(2, "name must be at least 2 characters")
-      .max(50, "name must be at most 50 characters")
-      .required("*name is required"),
-    description: Yup.string()
-      .min(2, "description must be at least 2 characters")
-      .max(200, "description must be at most 200 characters")
-      .required("*description is required"),
-    img: Yup.mixed()
-  .nullable()
-  .test("fileSize", "Max img size is 2MB", (value) => {
-    if (!value || typeof value === "string") return true;
-    return value.size <= 2000000;
-  })
-  .test("fileType", "Unsupported file type", (value) => {
-    if (!value || typeof value === "string") return true;
-    return ["image/jpg", "image/jpeg", "image/png"].includes(value.type);
-  }),
+      .min(2, "Name must be at least 2 characters")
+      .max(50, "Name must be at most 50 characters")
+      .required("*Name is required"),
+    link: Yup.string().url("Invalid URL"),
+    price: Yup.number()
+      .required("*Price is required"),
+    image: Yup.mixed()
+      .nullable()
+      .test(
+        "fileSize",
+        "Max image size is 2MB",
+        (value) => !value || value.size <= 2000000
+      )
+      .test(
+        "fileType",
+        "Unsupported file type",
+        (value) =>
+          !value ||
+          ["image/jpg", "image/jpeg", "image/png"].includes(value.type)
+      ),
   });
 
   const handleSubmit = async (values, { setSubmitting }) => {
@@ -55,18 +42,20 @@ useEffect(() => {
     try {
       const formData = new FormData();
       formData.append("name", values.name);
-      formData.append("description", values.description);
-      
-        if (values.img instanceof File) {
-  formData.append("img", values.img);
-}
-      
-      const result = await dispatch(updateCommittee({id, newCommitteeData: formData})).unwrap()
-      if(result){
-        notify("Your committee is updated successfully", "success")
-        nav("/committee-page")
+      formData.append("link", values.link);
+      formData.append("price", values.price);
+      if (values.image) {
+        formData.append("image", values.image);
       }
-        } catch (error) {
+      console.log(token)
+
+      const result = await dispatch(createProduct(formData)).unwrap()
+      if(result){
+        notify("Your product is added successfully", "success")
+        nav("/product-page")
+      }
+
+    } catch (error) {
   const err = error;
 
   if (Array.isArray(err)) {
@@ -79,8 +68,7 @@ useEffect(() => {
     notify("Something went wrong", "error");
   }
 
-}
- finally {
+} finally {
       setSubmitting(false);
       setLoading(false);
     }
@@ -89,21 +77,22 @@ useEffect(() => {
   const formik = useFormik({
     initialValues: {
       name: "",
-      description: "",
-      img: null,
+      link: "",
+      price: 0,
+      image: null,
     },
     validationSchema,
     onSubmit: handleSubmit,
   });
 
-  const handleimgUpload = (e) => {
+  const handleImageUpload = (e) => {
     const file = e.currentTarget.files[0];
     if (file) {
-      const imgUrl = URL.createObjectURL(file);
-      setSelectedimg(imgUrl);
-      formik.setFieldValue("img", file);
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedImage(imageUrl);
+      formik.setFieldValue("image", file);
     } else {
-      formik.setFieldValue("img", null);
+      formik.setFieldValue("image", null);
     }
   };
 
@@ -115,11 +104,11 @@ useEffect(() => {
       >
         
         <div className="flex flex-col items-center w-full md:w-1/3">
-          <label htmlFor="img" className="cursor-pointer group">
+          <label htmlFor="image" className="cursor-pointer group">
             <div className="relative w-32 h-32 rounded-full border-4 border-customBlue3 overflow-hidden group-hover:opacity-90 transition-all">
-              {selectedimg ? (
+              {selectedImage ? (
                 <img
-                  src={selectedimg}
+                  src={selectedImage}
                   alt="Preview"
                   className="object-cover w-full h-full"
                 />
@@ -147,18 +136,16 @@ useEffect(() => {
             </div>
             <input
               type="file"
-              id="img"
-              name="img"
+              id="image"
+              name="image"
               accept="image/*"
               className="hidden"
-              onChange={handleimgUpload}
-              onBlur={formik.handleBlur}
-
+              onChange={handleImageUpload}
             />
           </label>
-          {formik.errors.img && formik.touched.img && (
+          {formik.errors.image && formik.touched.image && (
             <p className="text-red-500 text-sm mt-2 text-center">
-              {formik.errors.img}
+              {formik.errors.image}
             </p>
           )}
         </div>
@@ -169,7 +156,7 @@ useEffect(() => {
               htmlFor="name"
               className="block text-sm font-semibold text-gray-700 mb-1"
             >
-              name
+              Name
             </label>
             <input
               type="text"
@@ -178,7 +165,6 @@ useEffect(() => {
               className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-customBlue3"
               value={formik.values.name}
               onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
             />
             {formik.errors.name && formik.touched.name && (
               <p className="text-red-500 text-sm mt-1">
@@ -189,34 +175,54 @@ useEffect(() => {
 
           <div>
             <label
-              htmlFor="description"
+              htmlFor="price"
               className="block text-sm font-semibold text-gray-700 mb-1"
             >
-              description
+              Price
             </label>
-            <textarea
-              id="description"
-              name="description"
-              rows="5"
+            <input
+            type="text"
+              id="price"
+              name="price"
               className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-customBlue3 resize-none"
-              value={formik.values.description}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-
+              value={formik.values.price}
+              onChange={(e)=>formik.setFieldValue("price", Number(e.target.value))}
             />
-            {formik.errors.description && formik.touched.description && (
+            {formik.errors.price && formik.touched.price && (
               <p className="text-red-500 text-sm mt-1">
-                {formik.errors.description}
+                {formik.errors.price}
               </p>
             )}
           </div>
+
+          <div>
+            <label htmlFor="link"
+                className="block text-sm font-medium text-gray-900 dark:text-white"
+>
+                Link
+            </label>
+            <input type="text"
+            name="link"
+            id="link"
+            value={formik.values.link}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="w-full border border-gray-300 mt-2 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-customBlue3"
+            />
+            {formik.errors.link && formik.touched.link && (
+              <p className="text-red-500 text-sm mt-1">
+                {formik.errors.link}
+              </p>
+            )}
+</div>
+
 
           <button
             type="submit"
             disabled={loading}
             className="mt-4 w-full mx-auto lg:w-[50%] bg-customBlue3 text-white rounded-md py-2 text-sm font-semibold hover:bg-customBlue2 transition-all disabled:opacity-50"
           >
-            {loading ? "Submitting..." : "Save Changes"}
+            {loading ? "Submitting..." : "Add Product"}
           </button>
         </div>
       </form>
