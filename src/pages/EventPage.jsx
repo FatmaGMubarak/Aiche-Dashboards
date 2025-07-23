@@ -50,7 +50,7 @@ export default function EventPage() {
               <p className="whitespace-nowrap">Add Event</p>
             </Link>
 
-            <select
+            {/* <select
               value={sortOrder}
               onChange={handleSortChange}
               className="text-white bg-customBlue3 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2"
@@ -61,7 +61,7 @@ export default function EventPage() {
               <option value="desc" className="bg-gray-400">
                 Descendingly
               </option>
-            </select>
+            </select> */}
           </div>
         </div>
 
