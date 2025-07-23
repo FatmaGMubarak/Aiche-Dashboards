@@ -126,7 +126,7 @@ useEffect(() => {
 
 
   return (
-    <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-10 pb-0 pt-16">
+    <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-10 pb-0 pt-24 px-4">
       <form
         onSubmit={formik.handleSubmit}
         className="bg-white shadow-xl rounded-2xl w-full max-w-4xl p-8 flex flex-col md:flex-row gap-8"
@@ -140,6 +140,7 @@ useEffect(() => {
                   src={selectedImage}
                   alt="Preview"
                   className="object-cover w-full h-full"
+                  crossOrigin="anonymous"
                 />
               ) : (
                 <div className="flex flex-col items-center justify-center w-full h-full text-customBlue3">

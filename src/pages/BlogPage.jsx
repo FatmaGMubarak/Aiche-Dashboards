@@ -1,4 +1,3 @@
-import blogImg from "../assets/top-view-pink-keyboard-with-copyspace.jpg";
 import { useEffect, useState } from "react";
 import avatar from "../assets/avatar.png";
 import { useSelector, useDispatch } from "react-redux";
@@ -7,43 +6,36 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import notify from "../hooks/Notifications";
 import DeleteModal from '../components/confirm/DeleteModal'
 import { ThreeDot } from "react-loading-indicators";
+import { MdOutlineModeEdit } from "react-icons/md";
+import { IoTrashBin } from "react-icons/io5";
+
+
 
 export default function BlogPage() {
   const nav = useNavigate();
   const { id } = useParams();
   const blog = useSelector((state) => state.blog?.blog);
   const loading = useSelector((state) => state.blog?.loading);
-    const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (id) {
-      dispatch(fetchBlogById(id));
-    }
+    if (id) dispatch(fetchBlogById(id));
   }, [dispatch, id]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-
-  
-  const handleDelete = () =>{
-setIsModalOpen(true)
-  }
-
-  const handleCancel = () =>{
-    setIsModalOpen(false)
-  }
-
-  const handleConfirm = () =>{
-        dispatch(deleteBlog(id));
-        setIsModalOpen(false)
-        notify("You deleted this blog successfully", "success")
-        
+  const handleDelete = () => setIsModalOpen(true);
+  const handleCancel = () => setIsModalOpen(false);
+  const handleConfirm = () => {
+    dispatch(deleteBlog(id));
+    setIsModalOpen(false);
+    notify("You deleted this blog successfully", "success");
     nav("/blog-home");
-  }
+  };
 
   if (loading || !blog) {
     return (
@@ -55,87 +47,66 @@ setIsModalOpen(true)
 
   return (
     <>
-    <DeleteModal onConfirm={handleConfirm}
-    onCancel={handleCancel}
-    isOpen={isModalOpen}
-message="Are you sure you want to delete this blog?"
-/>
-    <div className="flex w-full justify-center items-center min-h-screen pt-28">
-      <div className="relative w-[90%] sm:max-w-6xl flex flex-col lg:flex-row bg-white shadow-2xl hover:shadow-3xl hover:bg-gray-100 transition-all duration-300 h-[80vh] sm:h-[500px] md:h-[80vh] rounded-lg overflow-hidden">
-        <img
-          className="w-full lg:w-[40%] h-[50%] lg:h-full lg:object-cover"
-          src={blog?.image}
-          alt="Blog Cover"
-        />
+      <DeleteModal
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+        isOpen={isModalOpen}
+        message="Are you sure you want to delete this blog?"
+      />
 
-        <div className="flex flex-col p-6 w-full lg:w-[60%] h-full justify-center">
-          <div className="flex-grow">
-            <h5 className="text-4xl font-bold tracking-tight text-customBlue1">
-              {blog?.title}
-            </h5>
-            <p className="mt-5 text-lg font-normal text-gray-700">
-              {blog?.description}
-            </p>
-            <div className="mt-10 flex items-center gap-x-2">
-              <div className="w-10 h-10 rounded-full bg-customBlue2 flex justify-center items-center">
-                <img
-                  className="w-10 h-10 rounded-full"
-                  src={blog?.user?.image || avatar}
-                  alt="Rounded avatar"
-                />
-              </div>
-              <p>
-                Created By: <span className="font-semibold text-lg">{blog?.user?.name}</span>
-              </p>
-            </div>
+      <div className="flex w-full justify-center items-center min-h-screen pt-24 px-4">
+        <div className="w-full max-w-6xl bg-white dark:bg-gray-900 shadow-xl rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-2xl flex flex-col lg:flex-row">
+          <div className="w-full lg:w-2/5 h-64 lg:h-auto overflow-hidden">
+            <img
+              src={blog?.image}
+              alt={blog?.title}
+              className="w-full h-full object-cover"
+            />
           </div>
 
-          <div className="flex justify-between items-center mt-auto pb:0 lg:pb-4">
-            <Link
-              to={`/edit-blog-form/${blog?.id}`}
-              className="flex items-center gap-2 px-7 py-1.5 bg-customBlue3 text-white font-semibold rounded-lg hover:bg-customBlue2 transition-all duration-300"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
-                />
-              </svg>
-              <p>Edit</p>
-            </Link>
+          <div className="w-full lg:w-3/5 p-8 flex flex-col justify-between">
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-bold text-customBlue1 mb-4 leading-tight">
+                {blog?.title}
+              </h1>
+              <p className="text-gray-700 dark:text-gray-300 text-base sm:text-lg leading-relaxed">
+                {blog?.description}
+              </p>
+            </div>
 
-            <button
-              onClick={handleDelete}
-              className="flex items-center gap-2 px-7 py-1.5 bg-red-800 text-white font-semibold rounded-lg hover:bg-red-900 transition-all ease-in-out duration-300 ml-4"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6"
+            <div className="flex items-center mt-8 gap-4">
+              <img
+                src={blog?.user?.image || avatar}
+                alt="Author"
+                className="w-10 h-10 rounded-full border border-gray-300"
+              />
+              <div>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">Created By</p>
+                <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                  {blog?.user?.name}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 flex flex-wrap gap-4 justify-between">
+              <Link
+                to={`/edit-blog-form/${blog?.id}`}
+                className="flex items-center gap-2 px-5 py-2 text-sm font-medium text-white bg-customBlue3 rounded-md hover:bg-customBlue2 transition"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                />
-              </svg>
-              <p>Delete</p>
-            </button>
+                <MdOutlineModeEdit className="text-lg" /> Edit
+              </Link>
+
+              <button
+                onClick={handleDelete}
+                className="flex items-center gap-2 px-5 py-2 text-sm font-medium text-white bg-red-700 rounded-md hover:bg-red-800 transition"
+              >
+                <IoTrashBin className="text-lg" /> Delete
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </>
   );
 }
+

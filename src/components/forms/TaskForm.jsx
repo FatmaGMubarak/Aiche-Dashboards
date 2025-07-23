@@ -33,9 +33,9 @@ export default function TaskForm() {
       formData.append("title", values.title);
       formData.append("description", values.description);
         formData.append("link", values.link)
-              const result = await dispatch(createTask({ committee_id: committeeId, taskData: formData }));
+        const result = await dispatch(createTask({ committee_id: committeeId, taskData: formData })).unwrap();
 
-              if (result){
+        if (result){
                 notify("Your task is added successfully", "success")
                 nav(`/committees/${committeeId}/task-page`)
               }
@@ -70,7 +70,7 @@ export default function TaskForm() {
 
 
   return (
-    <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-10 pb-0 pt-16">
+    <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-10 pb-0 pt-24 px-4">
       <form
         onSubmit={formik.handleSubmit}
         className="bg-white shadow-xl rounded-2xl w-full max-w-3xl p-8 flex flex-col gap-8"
@@ -113,7 +113,7 @@ export default function TaskForm() {
               name="description"
               rows="5"
               className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-customBlue3 resize-none"
-              value={formik.values.d}
+              value={formik.values.description}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />

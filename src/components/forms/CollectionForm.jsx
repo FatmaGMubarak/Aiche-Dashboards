@@ -14,7 +14,8 @@ export default function CollectionForm() {
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const location = useLocation()
-  // const productId = location.state.productId;
+  const productIds = location.state.productId || [];
+  const productTotal = location.state.totalPrice || "";
 
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -25,8 +26,8 @@ export default function CollectionForm() {
       .min(2, "Description must be at least 2 characters")
       .max(200, "Description must be at most 200 characters")
       .required("*Description is required"),
-    total: Yup.string()
-      .required("*Description is required"),
+    // total: Yup.string()
+    //   .required("*Description is required"),
     image: Yup.mixed()
       .nullable()
       .test(
@@ -49,8 +50,10 @@ export default function CollectionForm() {
       const formData = new FormData();
       formData.append("name", values.name);
       formData.append("description", values.description);
-      formData.append("total", values.total);
-      // formData.append("total", values.total);
+      formData.append("total", productTotal);
+      productIds.forEach(id => {
+  formData.append("products_id[]", id);
+});
       if (values.image) {
         formData.append("image", values.image);
       }
@@ -85,12 +88,17 @@ export default function CollectionForm() {
     initialValues: {
       name: "",
       description: "",
-      total: "",
+      total: productTotal,
       image: null,
+      products_id: productIds,
     },
     validationSchema,
     onSubmit: handleSubmit,
   });
+
+console.log(productIds)
+console.log(productTotal)
+
 
   const handleImageUpload = (e) => {
     const file = e.currentTarget.files[0];
@@ -104,13 +112,14 @@ export default function CollectionForm() {
   };
 
   return (
-    <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-10 pb-0 pt-16">
+    <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-10 pb-0 pt-24 px-4">
       <form
         onSubmit={formik.handleSubmit}
-        className="bg-white shadow-xl rounded-2xl w-full max-w-4xl p-8 flex flex-col md:flex-row gap-8"
+        className="bg-white shadow-xl rounded-2xl w-full max-w-4xl"
       >
         
-        <div className="flex flex-col items-center w-full md:w-1/3">
+        <div className="p-8 flex flex-col md:flex-row gap-8 ">
+          <div className="flex flex-col items-center w-full md:w-1/3">
           <label htmlFor="image" className="cursor-pointer group">
             <div className="relative w-32 h-32 rounded-full border-4 border-customBlue3 overflow-hidden group-hover:opacity-90 transition-all">
               {selectedImage ? (
@@ -212,6 +221,7 @@ export default function CollectionForm() {
             type="text"
               id="total"
               name="total"
+              disabled
               className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-customBlue3 resize-none"
               value={formik.values.total}
               onChange={formik.handleChange}
@@ -226,14 +236,26 @@ export default function CollectionForm() {
 
 
 
+
+        </div>
+        
+        </div>
+                 <div className="w-full flex justify-between items-center mb-3 ">
+           <button
+          onClick={()=>nav("/product-page")}
+          
+            className="mt-4 w-full mx-auto lg:w-[30%] bg-customBlue3 text-white rounded-md py-2 text-sm font-semibold hover:bg-customBlue2 transition-all disabled:opacity-50"
+          >
+            Back to products
+          </button>
           <button
             type="submit"
             disabled={loading}
-            className="mt-4 w-full mx-auto lg:w-[50%] bg-customBlue3 text-white rounded-md py-2 text-sm font-semibold hover:bg-customBlue2 transition-all disabled:opacity-50"
+            className="mt-4 w-full mx-auto lg:w-[30%] bg-customBlue3 text-white rounded-md py-2 text-sm font-semibold hover:bg-customBlue2 transition-all disabled:opacity-50"
           >
             {loading ? "Submitting..." : "Add Collection"}
           </button>
-        </div>
+         </div>
       </form>
     </div>
   );

@@ -85,7 +85,7 @@ nav("/event-page");
   };
 
   return (
-    <div className="w-full flex justify-center items-center py-8 mt-0 lg:mt-10 pt-16">
+    <div className="w-full flex justify-center items-center py-8 mt-0 lg:mt-10 pt-24 px-4">
       <form onSubmit={formik.handleSubmit} className="bg-white shadow-xl rounded-2xl w-full max-w-4xl p-8 flex flex-col md:flex-row gap-8 mb-5">
         <div className="flex flex-col items-center w-full md:w-1/3">
           <label htmlFor="images" className="cursor-pointer group">

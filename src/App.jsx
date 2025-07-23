@@ -42,6 +42,7 @@ import ProductCard from "./components/cards/ProductCard";
 import ProductPage from "./pages/ProductPage";
 import ProductDetails from "./pages/ProductDetails";
 import EditProductForm from "./components/forms/EditProductForm";
+import CollectionProductsPage from "./pages/CollectionProductsPage";
 
 function AppContent() {
   const location = useLocation();
@@ -88,6 +89,7 @@ function AppContent() {
         <Route path="/slider-form" element={<SliderForm />} />
         <Route path="/collection-page" element={<CollectionPage />} />
         <Route path="/product-page" element={<ProductPage />} />
+        <Route path="/collection-product-page/:id" element={<CollectionProductsPage />} />
         <Route path="/collection-card" element={<CollectionCard />} />
         <Route path="/product-card" element={<ProductCard />} />
         <Route path="/collection-form" element={<CollectionForm />} />

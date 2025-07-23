@@ -62,7 +62,7 @@ export default function EditEventForm() {
       then: (schema) => schema.required('place is required for offline events'),
       otherwise: (schema) => schema.notRequired(),
     }),
-    status: Yup.string().required("*status is required").oneOf(["open", "close"], "*Invalid status"),
+    status: Yup.string().required("*status is required").oneOf(["open", "closed"], "*Invalid status"),
   });
 
   const handleSubmit = async (values, { setSubmitting }) => {
@@ -122,7 +122,7 @@ nav("/event-page")
   });
 
   return (
-    <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-80 pb-0 pt-16">
+    <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-80 pb-0 pt-24 px-4">
       <form
         onSubmit={formik.handleSubmit}
         className="bg-white shadow-xl rounded-2xl w-full max-w-4xl p-8 flex flex-col gap-6"
@@ -321,8 +321,8 @@ nav("/event-page")
     <input
       type="radio"
       name="status"
-      value="closd"
-      checked={formik.values.status === "close"}
+      value="closed"
+      checked={formik.values.status === "closed"}
       onChange={formik.handleChange}
       onBlur={formik.handleBlur}
       className="accent-customBlue3"
