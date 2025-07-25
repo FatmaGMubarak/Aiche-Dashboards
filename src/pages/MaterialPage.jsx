@@ -4,9 +4,12 @@ import { Link } from "react-router-dom";
 import books from '../assets/books.png'
 import block from '../assets/block.png'
 import { useSelector,useDispatch } from "react-redux";
-import { fetchMaterials } from "../store/reducers/materialSlice";
+import { fetchMaterials, deleteMaterial } from "../store/reducers/materialSlice";
 import { ThreeDot } from "react-loading-indicators";
-
+import { FiTrash2 } from "react-icons/fi";
+import { RxDoubleArrowRight } from "react-icons/rx";
+import notify from "../hooks/Notifications";
+import DeleteModal from "../components/confirm/DeleteModal";
 
 const semesters =["Semester","All", "Semester 1", "Semester 2", "Semester 3", "Semester 4", "Semester 5", "Semester 6", "Semester 7", "Semester 8", "Semester 9", "Semester 10",] 
 
@@ -20,6 +23,8 @@ dispatch(fetchMaterials())
   },[dispatch])
   const [selectedSemester, setSelectedSemester] = useState("All");
   const [selectedDepartment, setSelectedDepartment] = useState("All");
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [materialToDelete, setMaterialToDelete] = useState(null)
 
   const filteredMaterials = materialsData?.filter((material =>
     {
@@ -29,6 +34,29 @@ dispatch(fetchMaterials())
       )
     })
   );
+
+   const handleDelete =  (id) => {
+    setMaterialToDelete(id)
+    setIsModalOpen(true)
+        console.log(id)
+
+  }
+
+  const handleCancel  = () =>{
+    setIsModalOpen(false)
+  }
+
+const handleConfirm =  () => {
+  try {
+     dispatch(deleteMaterial(materialToDelete)).unwrap(); 
+    notify("You deleted this banner successfully", "success");
+    dispatch(fetchMaterials())
+    setIsModalOpen(false);
+  } catch (error) {
+    notify("Failed to delete the banner", "error");
+  }
+};
+
 
 if(loading){
       return (
@@ -40,6 +68,13 @@ if(loading){
 
 
   return (
+        <>
+              <DeleteModal
+              onCancel={handleCancel}
+              onConfirm={handleConfirm}
+              isOpen={isModalOpen}
+              message="Are you sure you want to delete this material?"
+              />
     <div className="min-h-screen w-full container mx-auto pt-28">
               <div className="flex flex-col sm:flex-row sm:justify-between items-center sm:relative">
           <div className="flex justify-center items-center w-full mx-auto">
@@ -111,18 +146,34 @@ className="whitespace-nowrap">Add Material</Link>
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
-                className="bg-white shadow-lg rounded-lg p-5 border border-gray-200 hover:shadow-2xl transition-all"
+                className="bg-white shadow-lg rounded-lg p-5 border border-gray-200 hover:shadow-2xl transition-all relative"
               >
+                          <button
+                            onClick={() => handleDelete(material?.id)}
+                            className="absolute -top-5 -right-1 p-3 rounded-full bg-red-100 hover:bg-red-200 text-red-600"
+                            title="Delete"
+                          >
+                            <FiTrash2 size={20} />
+                          </button>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">{material.name}</h3>
                 <p className="text-gray-600"><img src={books} alt="" className="w-5 h-5 inline" /> <b>Semester:</b> {material.semester}</p>
                 <p className="text-gray-600"><img src={block} alt="" className="w-5 h-5 inline" /> <b>Department:</b> {material.department}</p>
-                <a
+                  <div className="flex justify-between items-center">
+
+                <Link className="mt-4 inline-block bg-customBlue3 text-white px-4 py-1.5 rounded-lg hover:bg-customBlue2 transition"
+>
+                Edit
+                </Link>
+                                    <a
                   href={material.link}
                   target="_blank"
-                  className="mt-4 inline-block bg-customBlue3 text-white px-4 py-2 rounded-lg hover:bg-customBlue2 transition"
+                  className="mt-4 text-gray-400 hover:text-gray-500 transition"
                 >
                   View Material
+                  <RxDoubleArrowRight className="inline ml-1" />
+
                 </a>
+                  </div>
               </motion.div>
             ))
           ) : (
@@ -131,5 +182,6 @@ className="whitespace-nowrap">Add Material</Link>
         </AnimatePresence>
       </div>
     </div>
+    </>
   );
 }

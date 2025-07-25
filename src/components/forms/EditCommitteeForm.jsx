@@ -5,12 +5,14 @@ import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { updateCommittee, fetchCommitteeById } from "../../store/reducers/committeeSlice";
+import { ThreeDot } from "react-loading-indicators";
 
 export default function EditCommitteeForm() {
   const {id} = useParams()
   const nav = useNavigate()
   const dispatch = useDispatch()
   const committee = useSelector((state)=>state.committee?.committee)
+  const loadingPage = useSelector((state)=>state.committee?.loading)
   const [loading, setLoading] = useState(false);
   const [selectedimg, setSelectedimg] = useState(null);
 useEffect(()=>{
@@ -106,6 +108,14 @@ useEffect(() => {
       formik.setFieldValue("img", null);
     }
   };
+
+      if(loadingPage){
+          return (
+      <div className="min-h-screen w-full flex justify-center items-center">
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
+      </div>
+    );
+  }
 
   return (
     <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-10 pb-0 pt-24 px-4">

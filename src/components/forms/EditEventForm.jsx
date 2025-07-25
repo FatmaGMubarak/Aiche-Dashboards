@@ -5,9 +5,11 @@ import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { updateEvent, fetchEventById } from "../../store/reducers/eventSlice";
 import { useNavigate, useParams } from "react-router-dom";
+import { ThreeDot } from "react-loading-indicators";
 
 export default function EditEventForm() {
   const event = useSelector((state)=>state.event?.event)
+  const loadingPage = useSelector((state)=>state.event?.loading)
   const {id} = useParams()
   const nav = useNavigate()
   const [loading, setLoading] = useState(false);
@@ -120,6 +122,14 @@ nav("/event-page")
     validationSchema,
     onSubmit: handleSubmit,
   });
+
+      if(loadingPage){
+          return (
+      <div className="min-h-screen w-full flex justify-center items-center">
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
+      </div>
+    );
+  }
 
   return (
     <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-80 pb-0 pt-24 px-4">

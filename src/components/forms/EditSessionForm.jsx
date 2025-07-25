@@ -6,8 +6,11 @@ import { updateSession, fetchSessionById } from "../../store/reducers/sessionSli
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { ThreeDot } from "react-loading-indicators";
+
 export default function EditSessionForm() {
-  const session = useSelector((state)=>state.session.session)
+  const session = useSelector((state)=>state.session?.session)
+  const loadingPage = useSelector((state)=>state.session?.loading)
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch()
   const nav = useNavigate()
@@ -95,6 +98,13 @@ const result = await dispatch(updateSession({
     onSubmit: handleSubmit,
   });
 
+      if(loadingPage){
+          return (
+      <div className="min-h-screen w-full flex justify-center items-center">
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
+      </div>
+    );
+  }
 
   return (
     <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-10 pb-0 pt-24 px-4">

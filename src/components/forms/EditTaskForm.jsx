@@ -5,10 +5,11 @@ import * as Yup from "yup";
 import { useSelector,useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {  fetchTaskById, updateTask } from "../../store/reducers/taskSlice";
-
+import { ThreeDot } from "react-loading-indicators";
 
 export default function EditTaskForm() {
     const task = useSelector((state)=>state.task?.task)
+    const loadingPage = useSelector((state)=>state.task?.loading)
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch()
   const nav = useNavigate()
@@ -57,6 +58,7 @@ const result = await dispatch(updateTask({
 }));
 
               if (result){
+                notify("Your task is updated successfully", "success")
                 nav(`/committees/${committeeId}/task-page`)
               }
     } catch (error) {
@@ -88,6 +90,13 @@ const result = await dispatch(updateTask({
     onSubmit: handleSubmit,
   });
 
+    if(loadingPage){
+          return (
+      <div className="min-h-screen w-full flex justify-center items-center">
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
+      </div>
+    );
+  }
 
   return (
     <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-10 pb-0 pt-24 px-4">

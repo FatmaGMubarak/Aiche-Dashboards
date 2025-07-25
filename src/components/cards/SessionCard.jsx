@@ -6,6 +6,7 @@ import { fetchSessions, deleteSession } from '../../store/reducers/sessionSlice'
 import DeleteModal from '../../components/confirm/DeleteModal'
 import notify from '../../hooks/Notifications'
 import { ThreeDot } from 'react-loading-indicators'
+import { FiTrash2 } from 'react-icons/fi'
 
 export default function SessionCard() {
   const sessions = useSelector((state)=>state.session?.sessions)
@@ -72,19 +73,15 @@ if (!sessions.length) return <p className="text-center text-lg">no sessions avai
       />
         <div className="max-w-5xl mx-auto px-5 space-y-6">
             {sessions.slice(0, visible).map((ele) => (
-                <div key={ele?.id} className="flex flex-col p-5 justify-center w-full md:2/3 bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-transform duration-300">                    
-                        <div className='flex justify-end items-end'>
-                           <button
-                                         onClick={()=>{
-                                          handleDelete(ele?.id)
-                                         }}
-                                          type="button"
-                                          className="text-white bg-red-700 hover:bg-red-800 rounded-full px-3 py-1.5 text-sm"
-                                        >
-                                          <svg xmlns="http://www.w3.org/2000/svg" className="size-5 inline" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                                          </svg>
-                                        </button>
+                <div key={ele?.id} className="flex flex-col p-5 justify-center w-full md:2/3 bg-white shadow-lg rounded-lg  hover:shadow-2xl transition-transform duration-300">                    
+                        <div className='flex justify-end items-end relative'>
+             <button
+                        onClick={() => handleDelete(ele?.id)}
+                        className="absolute -top-10 -right-7 p-3 rounded-full bg-red-100 hover:bg-red-200 text-red-600"
+                        title="Delete"
+                      >
+                        <FiTrash2 size={20} />
+                      </button>
                         </div>
                         <div className='relative flex justify-between items-center' >
 

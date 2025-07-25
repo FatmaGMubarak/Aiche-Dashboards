@@ -45,6 +45,7 @@ import EditProductForm from "./components/forms/EditProductForm";
 import CollectionProductsPage from "./pages/CollectionProductsPage";
 import ProfilePage from "./pages/ProfilePage";
 import RequestsPage from "./pages/RequestPage";
+import EditSliderForm from "./components/forms/EditSliderForm";
 
 function AppContent() {
   const location = useLocation();
@@ -99,6 +100,7 @@ function AppContent() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/product-form" element={<ProductForm />} />
         <Route path="/edit-product-form/:id" element={<EditProductForm />} />
+        <Route path="/edit-slider-form/:id" element={<EditSliderForm />} />
         <Route path="/product-detail/:id" element={<ProductDetails />} />
         <Route path="/event-data/:id" element={<EventData />} />
         <Route path="/edit-committee-form/:id" element={<EditCommitteeForm />} />

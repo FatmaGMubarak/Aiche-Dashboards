@@ -6,9 +6,11 @@ import { useParams } from "react-router-dom";
 import { useSelector,useDispatch } from "react-redux";
 import { updateAward, fetchAwardById } from "../../store/reducers/awardSlice";
 import { useNavigate } from "react-router-dom";
+import { ThreeDot } from "react-loading-indicators";
 
 export default function EditAwardForm() {
     const award = useSelector((state)=>state.award?.award)
+    const loadingPage = useSelector((state)=>state.award?.loading)
     const nav = useNavigate()
     const dispatch = useDispatch()
     const {id} = useParams()
@@ -83,6 +85,13 @@ export default function EditAwardForm() {
     onSubmit: handleSubmit,
   });
 
+      if(loadingPage){
+          return (
+      <div className="min-h-screen w-full flex justify-center items-center">
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
+      </div>
+    );
+  }
 
   return (
     <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-10 pb-0 pt-24 px-4">

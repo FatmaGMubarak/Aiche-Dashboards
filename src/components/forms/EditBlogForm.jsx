@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import { useSelector,useDispatch } from "react-redux";
 import {fetchBlogById, updateBlog} from "../../store/reducers/blogSlice"
 import { useNavigate, useParams } from "react-router-dom";
+import { ThreeDot } from "react-loading-indicators";
 
 export default function EditBlogForm() {
     const {id} = useParams()
@@ -13,6 +14,7 @@ export default function EditBlogForm() {
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const blog = useSelector((state)=>state.blog?.blog)
+  const loadingPage = useSelector((state)=>state.blog?.loading)
   // const admin = ["Admin 1", "Admin 2", "Admin 3", "Admin 4", "Admin 5", "Admin 6", "Admin 7","Admin 8"]
 useEffect(()=>{
     if(id){
@@ -115,6 +117,13 @@ useEffect(() => {
     }
   };
 
+      if(loadingPage){
+          return (
+      <div className="min-h-screen w-full flex justify-center items-center">
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
+      </div>
+    );
+  }
 
   return (
     <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-10 pb-0 pt-24 px-4">

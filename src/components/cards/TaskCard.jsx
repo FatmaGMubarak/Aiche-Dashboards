@@ -5,6 +5,9 @@ import { fetchTasks, deleteTask } from '../../store/reducers/taskSlice';
 import DeleteModal from '../../components/confirm/DeleteModal'
 import notify from '../../hooks/Notifications';
 import { ThreeDot } from 'react-loading-indicators';
+import { FiTrash2 } from 'react-icons/fi';
+
+
 export default function TaskCard() {
   const dispatch = useDispatch();
   const { id: committeeId } = useParams(); 
@@ -72,20 +75,15 @@ if (!filteredTasks.length) return <p className="text-center text-lg">no tasks av
           key={ele?.id}
           className="flex flex-col p-5 justify-center w-full bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-transform duration-300 mb-6"
         >
-          <div className="w-full flex justify-between items-center">
+          <div className="w-full flex justify-between items-center relative">
             <h5 className="text-xl font-bold text-gray-900">{ele?.title}</h5>
-            <button
-             onClick={
-              ()=>{
-                handleDelete(ele?.id)
-             }}
-              type="button"
-              className="text-white bg-red-700 hover:bg-red-800 rounded-full px-3 py-1.5 text-sm"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="size-5 inline" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-              </svg>
-            </button>
+             <button
+                        onClick={() => handleDelete(ele?.id)}
+                        className="absolute top-2 right-2 p-3 rounded-full bg-red-100 hover:bg-red-200 text-red-600"
+                        title="Delete"
+                      >
+                        <FiTrash2 size={20} />
+                      </button>
           </div>
           <p className="text-gray-700 mt-2">{ele?.description}</p>
           <hr className="my-5 border-t-2 border-gray-300" />

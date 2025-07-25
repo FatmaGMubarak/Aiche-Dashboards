@@ -1,16 +1,42 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import notify from "../../hooks/Notifications";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { createBanner } from "../../store/reducers/bannerSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { fetchBannerById, updateBanner } from "../../store/reducers/bannerSlice";
+import { ThreeDot } from "react-loading-indicators";
 
-export default function SliderForm() {
+export default function EditSliderForm() {
+    const {id} = useParams()
   const nav = useNavigate()
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false);
   const [selectedimage, setSelectedimage] = useState(null);
+  const post = useSelector((state)=> state.banner?.banner)
+  const loadingPage = useSelector((state)=> state.banner?.loading)
+
+
+  useEffect(()=>{
+        if(id){
+            dispatch(fetchBannerById(id))
+            console.log(post)
+        }
+    },[dispatch, id])
+
+  useEffect(() => {
+      if (post) {
+        formik.setValues({
+          title: post?.title || "",
+          link: post?.link || "",
+          type: post?.type || "",
+          image: post?.image || null,
+        });
+        setSelectedimage(post?.image);
+        console.log(post)
+      }
+    }, [post]);
+
 
   const validationSchema = Yup.object({
     title: Yup.string()
@@ -24,19 +50,15 @@ export default function SliderForm() {
     type: Yup.string()
       .required("*type is required"),
     image: Yup.mixed()
-      .nullable()
-      .test(
-        "fileSize",
-        "Max image size is 2MB",
-        (value) => !value || value.size <= 2000000
-      )
-      .test(
-        "fileType",
-        "Unsupported file type",
-        (value) =>
-          !value ||
-          ["image/jpg", "image/jpeg", "image/png"].includes(value.type)
-      ),
+     .nullable()
+     .test("fileSize", "Max img size is 2MB", (value) => {
+       if (!value || typeof value === "string") return true;
+       return value.size <= 2000000;
+     })
+     .test("fileType", "Unsupported file type", (value) => {
+       if (!value || typeof value === "string") return true;
+       return ["image/jpg", "image/jpeg", "image/png"].includes(value.type);
+     }),
   });
 
   const handleSubmit = async (values, { setSubmitting }) => {
@@ -46,12 +68,12 @@ export default function SliderForm() {
       formData.append("title", values.title);
       formData.append("link", values.link);
       formData.append("type", values.type);
-      if (values.image) {
-        formData.append("image", values.image);
-      }
-      const result = await dispatch(createBanner(formData)).unwrap()
+       if (values.image instanceof File) {
+  formData.append("image", values.image);
+}
+      const result = await dispatch(updateBanner({id ,newBannerData: formData})).unwrap()
       if(result){
-        notify("Your post is added successfully", "success")
+        notify("Your post is updated successfully", "success")
         nav("/slider-page")
       }
         }catch (error) {
@@ -94,6 +116,14 @@ export default function SliderForm() {
       formik.setFieldValue("image", null);
     }
   };
+
+      if(loadingPage){
+          return (
+      <div className="min-h-screen w-full flex justify-center items-center">
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
+      </div>
+    );
+  }
 
   return (
     <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-10 pb-0 pt-24 px-4">
@@ -228,7 +258,7 @@ export default function SliderForm() {
             disabled={loading}
             className="mt-4 w-full mx-auto lg:w-[50%] bg-customBlue3 text-white rounded-md py-2 text-sm font-semibold hover:bg-customBlue2 transition-all disabled:opacity-50"
           >
-            {loading ? "Submitting..." : "Add Post"}
+            {loading ? "Submitting..." : "Save changes"}
           </button>
         </div>
       </form>
