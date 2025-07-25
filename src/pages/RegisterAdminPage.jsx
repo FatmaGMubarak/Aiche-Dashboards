@@ -6,7 +6,8 @@ import notify from "../hooks/Notifications";
 import { FaSpinner } from "react-icons/fa";
 
 export default function RegisterAdminPage() {
-  const admim = useSelector((state) => state.auth.admim);
+  const admim = useSelector((state) => state.auth?.admim);
+  const user = useSelector((state) => state.auth?.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
@@ -34,31 +35,29 @@ export default function RegisterAdminPage() {
     setSuccess("");
   };
 
-  const handleSubmit = async (e, { setSubmitting }) => {
-    e.preventDefault();
-        setLoading(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
+  try {
+    const registerData = {
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+      title: formData.title,
+    };
 
-    try {
+    await dispatch(registerAdmin(registerData)).unwrap();
 
-      const registerData = {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        title: formData.title,
-      };
+    notify("Admin registered successfully!", "success");
+    setFormData({ name: "", title: "", email: "", password: "" });
+  } catch (err) {
+    notify("Registration failed.", "error");
+  } finally {
+    setLoading(false);
+  }
+};
 
-      await dispatch(registerAdmin(registerData)).unwrap();
-
-      notify("Admin registered successfully!", "success")
-      setFormData({ name: "", title: "", email: "", password: "" });
-    } catch (err) {
-      notify("Registration failed.", "error")
-    }finally {
-      setSubmitting(false);
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="flex justify-center items-center w-full min-h-screen">
@@ -103,7 +102,7 @@ export default function RegisterAdminPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-customBlue3 text-white py-3 rounded-lg hover:bg-customBlue2"
+            className="w-full bg-customBlue3 text-white py-3 rounded-lg hover:bg-customBlue2 flex justify-center items-center"
           >
             {loading ? (
                             <FaSpinner className="animate-spin text-xl" />

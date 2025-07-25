@@ -30,11 +30,12 @@ export const registerAdmin = createAsyncThunk(
   async (registerData, { rejectWithValue, getState }) => {
     try {
       const token = getState().auth.token;
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
+            const config = {
+                headers: 
+                {
+                    Authorization : `Bearer ${token}`
+                }
+            }
       const response = await api.post("/api/admin/register", registerData, config);
       return response?.data;
     } catch (error) {
@@ -103,22 +104,22 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(registerAdmin.fulfilled, (state, action) => {
+      .addCase(registerAdmin.fulfilled, (state) => {
   state.loading = false;
-  const user = action.payload?.user;
-  const role = user?.title;
+  // const user = state.user;
+  // const role = user?.title;
 
-  if (role === "admin") {
-    state.admin = user;
-    localStorage.setItem("admin", JSON.stringify(user));
-  }
+  // if (role === "admin") {
+  //   state.admin = user;
+  //   localStorage.setItem("admin", JSON.stringify(user));
+  // }
 
-  state.token = action.payload?.token;
-  localStorage.setItem("token", action.payload?.token);
+  // state.token = action.payload?.token;
+  // localStorage.setItem("token", action.payload?.token);
 
-  if (action.payload?.token) {
-    Cookies.set("token", action.payload.token, { expires: 7 });
-  }
+  // if (action.payload?.token) {
+  //   Cookies.set("token", action.payload.token, { expires: 7 });
+  // }
 })
 
       .addCase(registerAdmin.rejected, (state, action) => {

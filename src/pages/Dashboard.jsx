@@ -12,6 +12,7 @@ const dashboardItems = [
   { title: "Collections", path: "/collection-page" },
   { title: "Register Admin", path: "/register" },
   { title: "Assign Admin", path: "/assign" },
+  { title: "Pending Requests", path: "/request" },
 ];
 
 export default function Dashboard() {

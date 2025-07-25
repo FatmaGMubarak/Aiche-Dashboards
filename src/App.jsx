@@ -43,6 +43,8 @@ import ProductPage from "./pages/ProductPage";
 import ProductDetails from "./pages/ProductDetails";
 import EditProductForm from "./components/forms/EditProductForm";
 import CollectionProductsPage from "./pages/CollectionProductsPage";
+import ProfilePage from "./pages/ProfilePage";
+import RequestsPage from "./pages/RequestPage";
 
 function AppContent() {
   const location = useLocation();
@@ -66,6 +68,7 @@ function AppContent() {
         <Route path="/assign" element={<AdminAssignmentPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/blog-home" element={<BlogHome />} />
+        <Route path="/request" element={<RequestsPage />} />
         <Route path="/blog-page/:id" element={<BlogPage />} />
         <Route path="/award-page" element={<AwardsPage />} />
         <Route path="/event-page" element={<EventPage />} />
@@ -93,6 +96,7 @@ function AppContent() {
         <Route path="/collection-card" element={<CollectionCard />} />
         <Route path="/product-card" element={<ProductCard />} />
         <Route path="/collection-form" element={<CollectionForm />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/product-form" element={<ProductForm />} />
         <Route path="/edit-product-form/:id" element={<EditProductForm />} />
         <Route path="/product-detail/:id" element={<ProductDetails />} />

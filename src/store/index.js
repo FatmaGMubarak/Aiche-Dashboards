@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import  authSlice  from './reducers/authSlice';
 import  adminSlice  from './reducers/adminSlice';
+import  userSlice  from './reducers/userSlice';
 import  blogSlice  from './reducers/blogSlice';
 import  materialSlice  from './reducers/materialSlice';
 import  eventSlice  from './reducers/eventSlice';
@@ -16,6 +17,7 @@ const store = configureStore(
         reducer:{
             auth:authSlice,
             admin: adminSlice,
+            user: userSlice,
             blog:blogSlice,
             material:materialSlice,
             event: eventSlice,

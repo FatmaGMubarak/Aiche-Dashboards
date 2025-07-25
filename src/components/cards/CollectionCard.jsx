@@ -33,7 +33,7 @@ const handleCancel = () =>{
 
 const handleConfirm = () =>{
   dispatch(deleteCollection(collectionToDelete))
-  notify("You deleted this award successfully", "success")
+  notify("You deleted this collection successfully", "success")
   setIsModalOpen(false)
   nav("/collection-page")
 }
@@ -64,8 +64,8 @@ const handleConfirm = () =>{
         >
           
           <button
-            onClick={() => handleDelete(collection.id)}
-            className="absolute top-2 right-2 p-3 rounded-full bg-red-100 hover:bg-red-200 text-red-600 hidden group-hover:block"
+            onClick={() => handleDelete(collection?.id)}
+            className="absolute top-2 right-2 p-3 rounded-full bg-red-100 hover:bg-red-200 text-red-600 lg:hidden lg:group-hover:block"
             title="Delete"
           >
             <FiTrash2 size={20} />
@@ -74,8 +74,8 @@ const handleConfirm = () =>{
           
           <div className="h-52 sm:h-60 flex items-center justify-center p-5 sm:p-8 overflow-hidden rounded-t-lg">
             <img
-              src={collection.image || img}
-              alt={collection.name}
+              src={collection?.image || img}
+              alt={collection?.name}
               className="max-h-full max-w-full object-contain"
             />
           </div>
@@ -84,19 +84,19 @@ const handleConfirm = () =>{
           <div className="px-5 pb-5 flex flex-col justify-between flex-grow">
             <div className="text-center min-h-[100px]">
               <h1 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-                {collection.name}
+                {collection?.name}
               </h1>
               <h5 className="text-sm font-semibold tracking-tight text-gray-700 dark:text-gray-300 mt-1">
-                {collection.description}
+                {collection?.description}
               </h5>
             </div>
 
             <div className="flex flex-col items-center mt-4 gap-2">
               <span className="text-lg font-bold text-gray-900 dark:text-white">
-                ${collection.total}
+                ${collection?.total}
               </span>
               <Link
-                to={`/collection-product-page/${collection.id}`}
+                to={`/collection-product-page/${collection?.id}`}
                 className="text-white bg-customBlue3 hover:bg-customBlue2 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >
                 View Products

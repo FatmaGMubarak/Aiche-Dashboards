@@ -4,13 +4,14 @@ import api from "../../api/baseUrl";
 const initialState = {
   loading: false,
   error: null,
-  admins: []
+  admins: [],
+  members:[]
 };
 
 
 
 export const fetchAdmins = createAsyncThunk(
-    "committees/fetchAdmins",
+    "admins/fetchAdmins",
     async (_, {rejectWithValue, getState})=>{
         try{
             const token = getState().auth.token;
@@ -46,6 +47,62 @@ export const assignAdminToCommittee = createAsyncThunk(
     }
   }
 )
+export const pendingRequests = createAsyncThunk(
+  "admins/pendingRequests",
+  async(formData, {rejectWithValue, getState})=>{
+    try{
+      const token = getState().auth.token;
+      const config = {
+        headers: {
+                  Authorization: `Bearer ${token}`,
+        }
+      }
+      const response = await api.post(`/api/inactive-members`, formData , config)
+          return response?.data
+    }catch(error){
+        return rejectWithValue(error.response.data || error.message)
+    }
+  }
+)
+
+export const approveRequest = createAsyncThunk(
+  "admins/approveRequest",
+  async(formData, {rejectWithValue, getState})=>{
+    try{
+      const token = getState().auth.token;
+      const config = {
+        headers: {
+                  Authorization: `Bearer ${token}`,
+        }
+      }
+      const response = await api.post(`/api/approveMemberRequest`, formData , config)
+          return response?.data
+    }catch(error){
+        return rejectWithValue(error.response.data || error.message)
+    }
+  }
+)
+
+export const rejectRequest = createAsyncThunk(
+  "admins/rejectRequest",
+  async(formData, {rejectWithValue, getState})=>{
+    try{
+      const token = getState().auth.token;
+      const config = {
+        headers: {
+                  Authorization: `Bearer ${token}`,
+        }
+      }
+      const response = await api.post(`/api/rejectMemberRequest`, formData , config)
+          return response?.data
+    }catch(error){
+        return rejectWithValue(error.response.data || error.message)
+    }
+  }
+)
+
+
+
 
 const adminSlice = createSlice({
   name: "admin",
@@ -75,6 +132,40 @@ const adminSlice = createSlice({
         state.loading = false;
       })
       .addCase(assignAdminToCommittee.rejected, (state, action)=>{
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(pendingRequests.pending, (state)=>{
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(pendingRequests.fulfilled, (state, action)=>{
+        state.loading = false;
+        state.members = action.payload?.members
+      })
+      .addCase(pendingRequests.rejected, (state, action)=>{
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(approveRequest.pending, (state)=>{
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(approveRequest.fulfilled, (state)=>{
+        state.loading = false;
+      })
+      .addCase(approveRequest.rejected, (state, action)=>{
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(rejectRequest.pending, (state)=>{
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(rejectRequest.fulfilled, (state)=>{
+        state.loading = false;
+      })
+      .addCase(rejectRequest.rejected, (state, action)=>{
         state.loading = false;
         state.error = action.payload;
       })

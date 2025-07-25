@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu } from "antd";
 import { logout } from "../store/reducers/authSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import notify from "../hooks/Notifications";
+import avatar from '../assets/noProfile.png'
+
+
 import {
   ReadOutlined,
   EditOutlined,
@@ -16,12 +19,17 @@ import {
   ApartmentOutlined,
 } from "@ant-design/icons";
 import Modal from "../components/confirm/Modal";
+import { getProfile } from "../store/reducers/userSlice";
 
 const NavBar = ({ auth }) => {
   const [current, setCurrent] = useState("home");
   const navigate = useNavigate();
   const dispatch = useDispatch()
   const [modalOpen, setModalOpen] = useState(false)
+  const profile = useSelector((state)=>state?.user?.user)
+  useEffect(()=>{
+dispatch(getProfile())
+  }, [dispatch])
   const onClick = (e) => {
     setCurrent(e.key);
   };
@@ -115,6 +123,21 @@ const NavBar = ({ auth }) => {
           icon: <LoginOutlined />,
           onClick: () => navigate("/"),
         },
+        auth && {
+  label: (
+    <div className="flex lg:items-center lg:justify-center gap-2 lg:gap-0">
+      <img
+        src={profile?.image_url || avatar}
+        alt="Avatar"
+        className=" w-8 h-8 rounded-full object-cover lg:border lg:border-white lg:shadow-md -ml-2 gap-1 lg:-ml-0 lg:gap-0"
+      />
+      <span className="lg:hidden inline-block ">Profile</span>
+    </div>
+  ),
+  key: "profile",
+  icon: null,
+  onClick: () => navigate("/profile"),
+},
   ].filter(Boolean);
 
   return (
@@ -134,7 +157,7 @@ const NavBar = ({ auth }) => {
             onClick={onClick}
             selectedKeys={[current]}
             mode="horizontal"
-            className="!bg-transparent !border-b-0 justify-end bg-[#BED7EA]"
+            className="!bg-transparent !border-b-0  bg-[#BED7EA] flex justify-end items-center"
             items={menuItems}
           />
         </div>
