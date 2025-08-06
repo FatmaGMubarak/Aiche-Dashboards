@@ -10,6 +10,11 @@ export default function AwardForm() {
   const nav = useNavigate()
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false);
+      const [initialValues] = useState({
+  title: "",
+  description: "",
+  date: "",
+});
 
   const validationSchema = Yup.object({
     title: Yup.string()
@@ -67,6 +72,9 @@ export default function AwardForm() {
     onSubmit: handleSubmit,
   });
 
+    const handleCancel = () => {
+  formik.setValues(initialValues);
+};
 
   return (
     <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-10 pb-0 pt-24 px-4">
@@ -140,13 +148,24 @@ export default function AwardForm() {
 
 
         </div>
-        <button
-            type="submit"
-            disabled={loading}
-            className="mt-4 w-full lg:w-[40%] mx-auto bg-customBlue3 text-white rounded-md py-2 text-sm font-semibold hover:bg-customBlue2 transition-all disabled:opacity-50"
-          >
-            {loading ? "Submitting..." : "Add Award"}
-          </button>
+                  <div className="md:col-span-2 flex justify-center gap-4">
+  <button
+    type="submit"
+    disabled={loading}
+    className="px-6 py-2 bg-customBlue3 text-white rounded-xl hover:bg-customBlue2 transition disabled:opacity-50"
+  >
+    {loading ? "Adding..." : "Add Award"}
+  </button>
+
+  <button
+    type="button"
+    onClick={handleCancel}
+    disabled={loading}
+    className="px-6 py-2 bg-gray-300 text-gray-700 rounded-xl hover:bg-gray-400 transition disabled:opacity-50"
+  >
+    Cancel
+  </button>
+</div>
       </form>
     </div>
   );

@@ -8,6 +8,8 @@ import DeleteModal from '../components/confirm/DeleteModal'
 import { ThreeDot } from "react-loading-indicators";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { IoTrashBin } from "react-icons/io5";
+import { FaPhoneAlt } from "react-icons/fa";
+import { FaLinkedinIn } from "react-icons/fa";
 
 
 
@@ -74,19 +76,30 @@ export default function BlogPage() {
               </p>
             </div>
 
-            <div className="flex items-center mt-8 gap-4">
-              <img
-                src={blog?.user?.image || avatar}
-                alt="Author"
-                className="w-10 h-10 rounded-full border border-gray-300"
-              />
-              <div>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">Created By</p>
-                <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                  {blog?.user?.name}
-                </p>
-              </div>
-            </div>
+            <div className="flex items-start mt-8 gap-4">
+  <img
+    src={blog?.user?.image || avatar}
+    alt="Author"
+    className="w-16 h-16 rounded-full border border-gray-300"
+  />
+  <div>
+    <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Created By</p>
+    <p className="text-lg font-semibold text-gray-900 dark:text-white">{blog?.user?.name}</p>
+    <p className="text-sm text-gray-500 dark:text-gray-400">{blog?.user?.title}</p>
+    <p className="text-sm mt-1 text-gray-600 dark:text-gray-300">{blog?.user?.bio}</p>
+    <p className="text-sm mt-1 text-gray-600 dark:text-gray-300 inline-block"><FaPhoneAlt className="inline"/>
+ {blog?.user?.phone}</p>
+    <a
+      href={blog?.user?.linkedin}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-sm text-blue-500 hover:underline mt-1 block"
+    >
+      <FaLinkedinIn className="inline"/> LinkedIn
+    </a>
+  </div>
+</div>
+
 
             <div className="mt-6 flex flex-wrap gap-4 justify-between">
               <Link

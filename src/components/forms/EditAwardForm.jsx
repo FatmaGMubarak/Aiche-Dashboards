@@ -15,6 +15,11 @@ export default function EditAwardForm() {
     const dispatch = useDispatch()
     const {id} = useParams()
   const [loading, setLoading] = useState(false);
+    const [initialValues, setInitialValues] = useState({
+  title: "",
+  description: "",
+  date: "",
+});
   useEffect(()=>{
       if(id){
           dispatch(fetchAwardById(id))
@@ -23,11 +28,13 @@ export default function EditAwardForm() {
 
   useEffect(() => {
     if (award) {
-      formik.setValues({
-        title: award?.title || "",
+      const init = {
+                title: award?.title || "",
         description: award?.description || "",
         date: award?.date || "",
-      });
+      }
+                formik.setValues(init);
+    setInitialValues(init);
     }
   }, [award]);
 
@@ -84,6 +91,10 @@ export default function EditAwardForm() {
     validationSchema,
     onSubmit: handleSubmit,
   });
+
+    const handleCancel = () => {
+  formik.setValues(initialValues);
+};
 
       if(loadingPage){
           return (
@@ -165,13 +176,24 @@ export default function EditAwardForm() {
 
 
         </div>
-        <button
-            type="submit"
-            disabled={loading}
-            className="mt-4 w-full lg:w-[40%] mx-auto bg-customBlue3 text-white rounded-md py-2 text-sm font-semibold hover:bg-customBlue2 transition-all disabled:opacity-50"
-          >
-            {loading ? "Submitting..." : "Save Changes"}
-          </button>
+                  <div className="md:col-span-2 flex justify-center gap-4">
+  <button
+    type="submit"
+    disabled={loading}
+    className="px-6 py-2 bg-customBlue3 text-white rounded-xl hover:bg-customBlue2 transition disabled:opacity-50"
+  >
+    {loading ? "Saving..." : "Save Changes"}
+  </button>
+
+  <button
+    type="button"
+    onClick={handleCancel}
+    disabled={loading}
+    className="px-6 py-2 bg-gray-300 text-gray-700 rounded-xl hover:bg-gray-400 transition disabled:opacity-50"
+  >
+    Cancel
+  </button>
+</div>
       </form>
     </div>
   );

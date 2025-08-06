@@ -1,14 +1,25 @@
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import cover from '../assets/group-students-posing-with-notepads.jpg';
 import ProductCard from '../components/cards/ProductCard';
+import { fetchCollections } from '../store/reducers/collectionSlice';
+import { useSelector, useDispatch } from 'react-redux';
 
 
 export default function CollectionProductsPage() {
   const [sortOrder, setSortOrder] = useState('asc');
+  const collections = useSelector((state)=>state.collection.collections)
+  const dispatch = useDispatch()
+  const {id} = useParams()
   const handleSortChange = (event) => {
     setSortOrder(event.target.value);
   };
+  const filteredCollection = collections.find(col => col.id === Number(id));
+
+
+  useEffect(()=>{
+    dispatch(fetchCollections())
+  }, [dispatch])
 
   return (
     <>

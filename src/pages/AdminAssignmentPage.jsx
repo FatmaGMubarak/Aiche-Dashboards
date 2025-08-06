@@ -2,23 +2,29 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import { fetchCommittee } from '../store/reducers/committeeSlice';
-import { fetchAdmins, assignAdminToCommittee } from '../store/reducers/adminSlice';
+import { fetchAdmins, assignAdminToCommittee, removeAdminFromCommittee } from '../store/reducers/adminSlice';
 import notify from '../hooks/Notifications';
+import { AnimatePresence, motion } from 'framer-motion';
+import { FaCaretDown, FaCaretUp } from "react-icons/fa";
+import { ThreeDot } from 'react-loading-indicators';
 
 export default function AdminAssignmentPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const admim = useSelector((state) => state.auth.admim);
-  const admins = useSelector((state) => state.admin.admins || []);
+  const admins = useSelector((state) => state.admin?.admins || []);
+  const loading = useSelector((state) => state.admin.loading);
   const committees = useSelector((state) => state.committee.committees || []);
 
-  const [selectedAdmin, setSelectedAdmin] = useState(null);
-  const [selectedCommittee, setSelectedCommittee] = useState(null);
+  const [selectedAdmin, setSelectedAdmin] = useState("");
+  const [selectedCommittee, setSelectedCommittee] = useState("");
+  const [expandedCommitteeId, setExpandedCommitteeId] = useState(null);
 
   useEffect(() => {
     if (!admim) {
-      notify("Unauthorized", "error")
+      notify("Unauthorized", "error");
+      navigate("/");
     }
   }, [admim, navigate]);
 
@@ -29,7 +35,7 @@ export default function AdminAssignmentPage() {
 
   const handleAssign = async () => {
     if (!selectedAdmin || !selectedCommittee) {
-      notify("Please select both admin and committee.", "error")
+      notify("Please select both admin and committee.", "error");
       return;
     }
 
@@ -39,54 +45,133 @@ export default function AdminAssignmentPage() {
         committeeId: selectedCommittee,
       })).unwrap();
 
-      notify("Admin successfully assigned!", "success")
+      notify("Admin successfully assigned!", "success");
     } catch (error) {
-      notify("Failed to assign admin.", "error")
+      notify("Failed to assign admin.", "error");
     }
   };
 
+  const handleRemove = async (adminId, committeeId) => {
+    try {
+            console.log(adminId)
+
+      await dispatch(removeAdminFromCommittee({ adminId, committeeId })).unwrap();
+      notify("Admin successfully removed from committee", "success");
+      dispatch(fetchCommittee())
+    } catch (error) {
+      notify("Failed to remove admin.", "error");
+    }
+  };
+
+  const toggleCommittee = (id) => {
+    setExpandedCommitteeId((prev) => (prev === id ? null : id));
+  };
+
+        if(loading){
+          return (
+      <div className="min-h-screen w-full flex justify-center items-center">
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
+      </div>
+    );
+  }
+
+
   return (
-    <div className="max-w-4xl mx-auto p-28">
-      <h1 className="text-3xl font-bold mb-6">Assign Admin to Committee</h1>
+    <div className="max-w-5xl mx-auto p-10 pt-24">
+      <h1 className="text-4xl font-bold text-center mb-10 text-customBlue1">Manage Committee Admins</h1>
 
-      <div className="mb-6">
-        <label className="block font-semibold mb-2">Select Admin:</label>
-        <select
-          className="w-full border px-4 py-2 rounded"
-          value={selectedAdmin || ""}
-          onChange={(e) => setSelectedAdmin(Number(e.target.value))}
+      <div className="bg-white rounded-2xl shadow-md p-8 mb-12">
+        <h2 className="text-2xl font-semibold mb-6 text-gray-800">Assign Admin to Committee</h2>
+
+        <div className="grid sm:grid-cols-2 gap-6 mb-6">
+          <div>
+            <label className="block font-medium mb-2 text-gray-700">Select Admin:</label>
+            <select
+              className="w-full border border-gray-300 px-4 py-2 rounded"
+              value={selectedAdmin}
+              onChange={(e) => setSelectedAdmin(Number(e.target.value))}
+            >
+              <option value="">-- Choose Admin --</option>
+              {admins.map((admin) => (
+                <option key={admin.id} value={admin.id}>
+                  {admin.name} ({admin.email})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block font-medium mb-2 text-gray-700">Select Committee:</label>
+            <select
+              className="w-full border border-gray-300 px-4 py-2 rounded"
+              value={selectedCommittee}
+              onChange={(e) => setSelectedCommittee(Number(e.target.value))}
+            >
+              <option value="">-- Choose Committee --</option>
+              {committees.map((committee) => (
+                <option key={committee.id} value={committee.id}>
+                  {committee.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <button
+          onClick={handleAssign}
+          className="bg-customBlue3 text-white px-6 py-2 rounded hover:bg-customBlue2 transition"
         >
-          <option value="">-- Choose Admin --</option>
-          {admins.map((admin) => (
-            <option key={admin.id} value={admin.id}>
-              {admin.name} ({admin.email})
-            </option>
-          ))}
-        </select>
+          Assign Admin
+        </button>
       </div>
 
-      <div className="mb-6">
-        <label className="block font-semibold mb-2">Select Committee:</label>
-        <select
-          className="w-full border px-4 py-2 rounded"
-          value={selectedCommittee || ""}
-          onChange={(e) => setSelectedCommittee(Number(e.target.value))}
-        >
-          <option value="">-- Choose Committee --</option>
-          {committees.map((committee) => (
-            <option key={committee.id} value={committee.id}>
+     
+      <div className="bg-white rounded-2xl shadow-md p-8">
+        <h2 className="text-2xl font-semibold mb-6 text-gray-800">Committees & Admins</h2>
+        {committees.map((committee) => (
+          <div key={committee.id} className="mb-4 border-b border-gray-200 pb-4">
+            <div className=' flex items-center justify-between '>
+            <button
+              onClick={() => toggleCommittee(committee.id)}
+              className="w-full text-left font-semibold text-customBlue1 text-lg hover:underline transition"
+            >
               {committee.name}
-            </option>
-          ))}
-        </select>
+            </button>
+            {expandedCommitteeId === committee.id ?<FaCaretUp /> : <FaCaretDown/>}
+</div>
+            <AnimatePresence>
+              {expandedCommitteeId === committee.id && (
+                <motion.div
+                  key="adminList"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden mt-4"
+                >
+                  {committee.admins?.length > 0 ? (
+                    <ul className="space-y-2">
+                      {committee.admins?.map((admin, index) => (
+                        <li key={index} className="flex justify-between items-center bg-gray-50 p-4 rounded shadow-sm">
+                          <span className="font-medium text-gray-700">{admin?.name}</span>
+                          <button
+                            onClick={() => handleRemove(admin.profile.id, committee.id)}
+                            className="text-sm bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition"
+                          >
+                            Remove
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-sm text-gray-500 italic block">No admins assigned.</p>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        ))}
       </div>
-
-      <button
-        onClick={handleAssign}
-        className="bg-customBlue3 text-white px-6 py-2 rounded hover:bg-customBlue2"
-      >
-        Assign
-      </button>
     </div>
   );
 }

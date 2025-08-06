@@ -2,10 +2,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import { pendingRequests, approveRequest, rejectRequest } from "../store/reducers/adminSlice";
 import notify from "../hooks/Notifications";
+import { ThreeDot } from "react-loading-indicators";
 
 export default function RequestsPage() {
   const dispatch = useDispatch();
   const members = useSelector((state) => state.admin?.members || []);
+  const loadingPage = useSelector((state) => state.admin?.loading);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [verified, setVerified] = useState(false);
@@ -61,9 +63,18 @@ export default function RequestsPage() {
 
   const pendingMembers = members.filter((member) => member.status === "inactive");
 
+        if(loadingPage){
+          return (
+      <div className="min-h-screen w-full flex justify-center items-center">
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
+      </div>
+    );
+  }
+
+
   if (!verified) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6 pt-24">
         <form
           onSubmit={handleVerify}
           className="bg-white shadow-md p-8 rounded-xl w-full max-w-md border border-gray-200"
@@ -106,8 +117,10 @@ export default function RequestsPage() {
     );
   }
 
+
+  
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-6 pt-24">
       <div className="max-w-5xl mx-auto">
         <h1 className="text-3xl font-semibold text-customBlue1 text-center mb-8">
           Pending Membership Requests

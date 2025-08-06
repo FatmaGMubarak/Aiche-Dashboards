@@ -73,7 +73,7 @@ export const updateMaterial = createAsyncThunk(
                     Authorization : `Bearer ${token}`
                 }
             }
-            const response = await api.post(`/api/materials/${id}`, newMaterialData, config);
+            const response = await api.put(`/api/materials/${id}`, newMaterialData, config);
             return response.data
         } catch(error){
             return rejectWithValue(error.response.data || error.message)

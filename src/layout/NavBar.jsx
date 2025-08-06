@@ -135,9 +135,14 @@ const NavBar = ({ auth }) => {
               {
                 key: "username",
                 label: (
-                  <span className="font-semibold">
+                  <>
+                  <span className="font-semibold block">
                     {profile?.name || "User"}
                   </span>
+                  <span className="font-semibold">
+                    {profile?.email || "User Email"}
+                  </span>
+                  </>
                 ),
                 disabled: true,
               },

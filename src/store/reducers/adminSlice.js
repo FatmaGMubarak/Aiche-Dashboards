@@ -5,7 +5,9 @@ const initialState = {
   loading: false,
   error: null,
   admins: [],
-  members:[]
+  members:[],
+  orders:[],
+  users:[],
 };
 
 
@@ -39,7 +41,25 @@ export const assignAdminToCommittee = createAsyncThunk(
                   Authorization: `Bearer ${token}`,
         }
       }
-      const response = await api.post(`/api/committees/setAdmin`, {admin_id: adminId,
+      const response = await api.post(`/api/setAdmin`, {admin_id: adminId,
+          committee_id: committeeId,}, config)
+          return response.data
+    }catch(error){
+        return rejectWithValue(error.response.data || error.message)
+    }
+  }
+)
+export const removeAdminFromCommittee = createAsyncThunk(
+  "committees/removeAdminFromCommittee",
+  async({adminId, committeeId}, {rejectWithValue, getState})=>{
+    try{
+      const token = getState().auth.token;
+      const config = {
+        headers: {
+                  Authorization: `Bearer ${token}`,
+        }
+      }
+      const response = await api.post(`/api/removeAdmin`, {admin_id: adminId,
           committee_id: committeeId,}, config)
           return response.data
     }catch(error){
@@ -100,6 +120,40 @@ export const rejectRequest = createAsyncThunk(
     }
   }
 )
+export const getOrders = createAsyncThunk(
+  "admins/getOrders",
+  async(_, {rejectWithValue, getState})=>{
+    try{
+      const token = getState().auth.token;
+      const config = {
+        headers: {
+                  Authorization: `Bearer ${token}`,
+        }
+      }
+      const response = await api.get(`/api/collections-orders` , config)
+          return response?.data
+    }catch(error){
+        return rejectWithValue(error.response.data || error.message)
+    }
+  }
+)
+export const getMembers = createAsyncThunk(
+  "admins/getMembers",
+  async(_, {rejectWithValue, getState})=>{
+    try{
+      const token = getState().auth.token;
+      const config = {
+        headers: {
+                  Authorization: `Bearer ${token}`,
+        }
+      }
+      const response = await api.get(`/api/members` , config)
+          return response?.data
+    }catch(error){
+        return rejectWithValue(error.response.data || error.message)
+    }
+  }
+)
 
 
 
@@ -118,7 +172,7 @@ const adminSlice = createSlice({
       })
       .addCase(fetchAdmins.fulfilled, (state, action)=>{
         state.loading = false;
-        state.admins = action?.payload?.admins;
+        state.admins = action?.payload?.admins.data;
       })
       .addCase(fetchAdmins.rejected, (state, action) =>{
         state.loading = false;
@@ -132,6 +186,17 @@ const adminSlice = createSlice({
         state.loading = false;
       })
       .addCase(assignAdminToCommittee.rejected, (state, action)=>{
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(removeAdminFromCommittee.pending, (state)=>{
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(removeAdminFromCommittee.fulfilled, (state)=>{
+        state.loading = false;
+      })
+      .addCase(removeAdminFromCommittee.rejected, (state, action)=>{
         state.loading = false;
         state.error = action.payload;
       })
@@ -166,6 +231,30 @@ const adminSlice = createSlice({
         state.loading = false;
       })
       .addCase(rejectRequest.rejected, (state, action)=>{
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getOrders.pending, (state)=>{
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getOrders.fulfilled, (state, action)=>{
+        state.loading = false;
+        state.orders = action.payload.data;
+      })
+      .addCase(getOrders.rejected, (state, action)=>{
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getMembers.pending, (state)=>{
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getMembers.fulfilled, (state, action)=>{
+        state.loading = false;
+        state.users = action.payload.members;
+      })
+      .addCase(getMembers.rejected, (state, action)=>{
         state.loading = false;
         state.error = action.payload;
       })

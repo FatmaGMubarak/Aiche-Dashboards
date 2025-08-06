@@ -1,21 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchProducts } from "../../store/reducers/productSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ThreeDot } from "react-loading-indicators";
+import { fetchCollectionById } from "../../store/reducers/collectionSlice";
 
 export default function ProductCard() {
   const products = useSelector((state) => state.product.products);
   const loading = useSelector((state) => state.product.loading);
   const dispatch = useDispatch();
   const nav = useNavigate();
+  const { id : collectionId} = useParams()
+  const displayedProducts = collectionId ? collection?.products || [] : products || [];
+
 
   const [selectedIds, setSelectedIds] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
 
+  // useEffect(() => {
+  //   dispatch(fetchProducts());
+  // }, [dispatch]);
   useEffect(() => {
+  if (collectionId) {
+    dispatch(fetchCollectionById(collectionId));
+  } else {
     dispatch(fetchProducts());
-  }, [dispatch]);
+  }
+}, [collectionId]);
+
 
  const toggleSelection = (e, productId, productPrice) => {
   e.stopPropagation();
@@ -52,7 +64,7 @@ export default function ProductCard() {
   return (
     <div className="w-full px-2 sm:px-24 mx-auto py-5">
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-y-3">
-        {products.map((product) => {
+        {displayedProducts.map((product) => {
           const isSelected = selectedIds.includes(product.id);
           return (
             <div

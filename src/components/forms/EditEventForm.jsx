@@ -14,6 +14,18 @@ export default function EditEventForm() {
   const nav = useNavigate()
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch()
+        const [initialValues, setInitialValues] = useState({
+    title: "",
+    description: "",
+    start_date: "",
+    end_date: "",
+    category: "",
+    facebookLink: "",
+    formLink: "",
+    isOnline: "",
+    place: "",
+    status: ""
+  });
 
   useEffect(()=>{
       if(id){
@@ -24,8 +36,8 @@ export default function EditEventForm() {
 
   useEffect(() => {
     if (event) {
-      formik.setValues({
-        title: event?.title || "",
+      const init = {
+         title: event?.title || "",
         description: event?.description || "",
         start_date: event?.start_date || "",
         end_date: event?.end_date || "",
@@ -34,7 +46,9 @@ export default function EditEventForm() {
         formLink: event?.formLink || "",
         facebookLink: event?.facebookLink || "",
         status: event?.status || ""
-      });
+      }
+                formik.setValues(init);
+    setInitialValues(init);
     }
   }, [event]);
   const validationSchema = Yup.object({
@@ -131,8 +145,12 @@ nav("/event-page")
     );
   }
 
+  const handleCancel = () => {
+  formik.setValues(initialValues);
+};
+
   return (
-    <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-80 pb-0 pt-24 px-4">
+    <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-20 pb-0 px-4">
       <form
         onSubmit={formik.handleSubmit}
         className="bg-white shadow-xl rounded-2xl w-full max-w-4xl p-8 flex flex-col gap-6"
@@ -345,13 +363,24 @@ nav("/event-page")
   )}
 </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="mt-4 bg-customBlue3 text-white px-6 py-2 rounded hover:bg-customBlue2 transition"
-        >
-          {loading ? "Saving..." : "Save Changes"}
-        </button>
+                 <div className="md:col-span-2 flex justify-center gap-4">
+  <button
+    type="submit"
+    disabled={loading}
+    className="px-6 py-2 bg-customBlue3 text-white rounded-xl hover:bg-customBlue2 transition disabled:opacity-50"
+  >
+    {loading ? "Saving..." : "Save Changes"}
+  </button>
+
+  <button
+    type="button"
+    onClick={handleCancel}
+    disabled={loading}
+    className="px-6 py-2 bg-gray-300 text-gray-700 rounded-xl hover:bg-gray-400 transition disabled:opacity-50"
+  >
+    Cancel
+  </button>
+</div>
       </form>
     </div>
   );

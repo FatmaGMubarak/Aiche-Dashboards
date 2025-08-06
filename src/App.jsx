@@ -46,10 +46,21 @@ import CollectionProductsPage from "./pages/CollectionProductsPage";
 import ProfilePage from "./pages/ProfilePage";
 import RequestsPage from "./pages/RequestPage";
 import EditSliderForm from "./components/forms/EditSliderForm";
+import EditMaterialForm from "./components/forms/EditMaterialForm";
+import EditCollectionForm from "./components/forms/EditCollectionForm";
+import OrderPage from "./pages/OrderPage";
+import MembersPage from "./pages/MembersPage";
+import { useDispatch } from "react-redux";
+import { initialAuth } from "./store/reducers/authSlice";
 
 function AppContent() {
   const location = useLocation();
   const auth = true;
+    const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(initialAuth());
+  }, [dispatch]);
 
   const hideNavbarOnRoutes = ["/"]; 
 
@@ -92,6 +103,8 @@ function AppContent() {
         <Route path="/edit-award-form/:id" element={<EditAwardForm />} />
         <Route path="/slider-form" element={<SliderForm />} />
         <Route path="/collection-page" element={<CollectionPage />} />
+        <Route path="/order-page" element={<OrderPage />} />
+        <Route path="/member-page" element={<MembersPage />} />
         <Route path="/product-page" element={<ProductPage />} />
         <Route path="/collection-product-page/:id" element={<CollectionProductsPage />} />
         <Route path="/collection-card" element={<CollectionCard />} />
@@ -104,6 +117,8 @@ function AppContent() {
         <Route path="/product-detail/:id" element={<ProductDetails />} />
         <Route path="/event-data/:id" element={<EventData />} />
         <Route path="/edit-committee-form/:id" element={<EditCommitteeForm />} />
+        <Route path="/edit-material-form/:id" element={<EditMaterialForm />} />
+        <Route path="/edit-collection-form/:id" element={<EditCollectionForm />} />
         <Route path="/committee-data/:id" element={<CommitteeData />} />
         <Route path="/committees/:committeeId/edit-task-form/:taskId" element={<EditTaskForm />} />
         <Route path="/committees/:committeeId/edit-session-form/:sessionId" element={<EditSessionForm />} />

@@ -11,6 +11,12 @@ export default function SliderForm() {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false);
   const [selectedimage, setSelectedimage] = useState(null);
+      const [initialValues] = useState({
+  title: "",
+  link: "",
+  type: "",
+  image: null,
+});
 
   const validationSchema = Yup.object({
     title: Yup.string()
@@ -95,6 +101,14 @@ export default function SliderForm() {
     }
   };
 
+  const handleReset = () =>{
+      setSelectedimage(initialValues.image);
+
+  }
+    const handleCancel = () => {
+  formik.setValues(initialValues);
+};
+
   return (
     <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-10 pb-0 pt-24 px-4">
       <form
@@ -149,6 +163,23 @@ export default function SliderForm() {
               {formik.errors.image}
             </p>
           )}
+                      <div className="flex items-center gap-2 mt-4">
+  <button
+    type="button"
+    onClick={() => document.getElementById("image").click()}
+    className="px-4 py-1 bg-customBlue3 text-white rounded-md text-sm hover:bg-customBlue2 transition"
+  >
+    Upload
+  </button>
+
+  <button
+    type="button"
+    onClick={handleReset}
+    className="px-4 py-1 bg-gray-300 text-gray-700 rounded-md text-sm hover:bg-gray-400 transition"
+  >
+    Reset
+  </button>
+</div>
         </div>
 
         <div className="flex flex-col w-full md:w-2/3 gap-6">
@@ -223,13 +254,24 @@ export default function SliderForm() {
             )}
 </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-4 w-full mx-auto lg:w-[50%] bg-customBlue3 text-white rounded-md py-2 text-sm font-semibold hover:bg-customBlue2 transition-all disabled:opacity-50"
-          >
-            {loading ? "Submitting..." : "Add Post"}
-          </button>
+           <div className="md:col-span-2 flex justify-center gap-4">
+  <button
+    type="submit"
+    disabled={loading}
+    className="px-6 py-2 bg-customBlue3 text-white rounded-xl hover:bg-customBlue2 transition disabled:opacity-50"
+  >
+    {loading ? "Adding..." : "Add Post"}
+  </button>
+
+  <button
+    type="button"
+    onClick={handleCancel}
+    disabled={loading}
+    className="px-6 py-2 bg-gray-300 text-gray-700 rounded-xl hover:bg-gray-400 transition disabled:opacity-50"
+  >
+    Cancel
+  </button>
+</div>
         </div>
       </form>
     </div>

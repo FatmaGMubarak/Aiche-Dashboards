@@ -16,7 +16,12 @@ export default function EditProductForm() {
   const [selectedImage, setSelectedImage] = useState(null);
   const {id} = useParams()
 const product = useSelector((state)=>state.product.product)
-
+const [initialValues, setInitialValues] = useState({
+  name: "",
+  link: "",
+  price: "",
+  image: null,
+});
 
 
 useEffect(()=>{
@@ -27,12 +32,14 @@ useEffect(()=>{
 
 useEffect(() => {
     if (product) {
-      formik.setValues({
-        name: product?.name || "",
+      const init = {
+                name: product?.name || "",
         link: product?.link || "",
         price: product?.price || 0,
         image: product?.image || null,
-      });
+      }
+       formik.setValues(init);
+    setInitialValues(init);
       setSelectedImage(product.image);
     }
   }, [product]);
@@ -116,6 +123,15 @@ useEffect(() => {
     }
   };
 
+  const handleReset = () =>{
+  setSelectedImage(initialValues.image);
+  }
+
+    const handleCancel = () => {
+  formik.setValues(initialValues);
+
+};
+
   if (loadingRed) {
     return (
       <div className="min-h-screen w-full flex justify-center items-center">
@@ -164,6 +180,23 @@ useEffect(() => {
                 </div>
               )}
             </div>
+                        <div className="flex items-center gap-2 mt-4">
+  <button
+    type="button"
+    onClick={() => document.getElementById("image").click()}
+    className="px-4 py-1 bg-customBlue3 text-white rounded-md text-sm hover:bg-customBlue2 transition"
+  >
+    Upload
+  </button>
+
+  <button
+    type="button"
+    onClick={handleReset}
+    className="px-4 py-1 bg-gray-300 text-gray-700 rounded-md text-sm hover:bg-gray-400 transition"
+  >
+    Reset
+  </button>
+</div>
             <input
               type="file"
               id="image"
@@ -247,13 +280,24 @@ useEffect(() => {
 </div>
 
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-4 w-full mx-auto lg:w-[50%] bg-customBlue3 text-white rounded-md py-2 text-sm font-semibold hover:bg-customBlue2 transition-all disabled:opacity-50"
-          >
-            {loading ? "Submitting..." : "Save Changes"}
-          </button>
+                    <div className="md:col-span-2 flex justify-center gap-4">
+  <button
+    type="submit"
+    disabled={loading}
+    className="px-6 py-2 bg-customBlue3 text-white rounded-xl hover:bg-customBlue2 transition disabled:opacity-50"
+  >
+    {loading ? "Saving..." : "Save Changes"}
+  </button>
+
+  <button
+    type="button"
+    onClick={handleCancel}
+    disabled={loading}
+    className="px-6 py-2 bg-gray-300 text-gray-700 rounded-xl hover:bg-gray-400 transition disabled:opacity-50"
+  >
+    Cancel
+  </button>
+</div>
         </div>
       </form>
     </div>

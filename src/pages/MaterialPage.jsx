@@ -29,7 +29,7 @@ dispatch(fetchMaterials())
   const filteredMaterials = materialsData?.filter((material =>
     {
       return (
-        (selectedSemester === "All" || material.semester === selectedSemester) &&
+        (selectedSemester === "All" || material.semester === selectedSemester.toLowerCase()) &&
     (selectedDepartment === "All" || material.department === selectedDepartment)
       )
     })
@@ -161,6 +161,7 @@ className="whitespace-nowrap">Add Material</Link>
                   <div className="flex justify-between items-center">
 
                 <Link className="mt-4 inline-block bg-customBlue3 text-white px-4 py-1.5 rounded-lg hover:bg-customBlue2 transition"
+                to={`/edit-material-form/${material.id}`}
 >
                 Edit
                 </Link>

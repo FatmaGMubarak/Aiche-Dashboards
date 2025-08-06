@@ -23,14 +23,18 @@ export default function BlogCard() {
     setVisible((prev) => (prev > 9 ? prev - 9 : prev));
   };
 
+  if (loading) {
+    return (
+      <div className="max-w-5xl mx-auto px-5  flex justify-center items-start">
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="flex flex-col justify-center items-center w-full">
-        {loading ? (
-          <div className="w-full flex justify-center items-center py-12">
-            <ThreeDot color="#05284B" size="medium" text="" textColor="" />
-          </div>
-        ) : (
+
           <div className="w-full grid sm:grid-cols-2 md:grid-cols-3 gap-6 px-5 py-5">
             {blogs?.slice(0, visible).map((ele, i) => (
               <div
@@ -49,7 +53,10 @@ export default function BlogCard() {
                   <p className="mb-4 text-gray-700 dark:text-gray-400 text-sm line-clamp-3">
                     {ele.description}
                   </p>
-                  <div className="mt-auto w-full flex justify-end">
+                  <div className="mt-auto w-full flex justify-between items-center">
+                    <div>
+                      <img src={ele.user?.image} alt=""  className="w-10 h-10 bg-cover rounded-full"/>
+                    </div>
                     <Link
                       to={`/blog-page/${ele.id}`}
                       className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-customBlue3 rounded-lg hover:bg-customBlue2"
@@ -75,7 +82,7 @@ export default function BlogCard() {
               </div>
             ))}
           </div>
-        )}
+      
       </div>
 
       {!loading && (

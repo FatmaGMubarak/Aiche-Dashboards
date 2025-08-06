@@ -1,14 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import notify from "../../hooks/Notifications";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { useLoaderData, useNavigate } from "react-router-dom";
-import { createCollection } from "../../store/reducers/collectionSlice";
+import { fetchCollectionById, updateCollection } from "../../store/reducers/collectionSlice";
 import { useLocation } from "react-router-dom";
+import { ThreeDot } from "react-loading-indicators";
+import { useParams } from "react-router-dom";
+import {fetchProducts} from '../../store/reducers/productSlice'
 
-export default function CollectionForm() {
+
+export default function EditCollectionForm() {
+        const {id} = useParams()
   const token = useSelector((state)=>state.auth.token)
+  const collection = useSelector((state)=>state.collection?.collection)
+  const loadingPage = useSelector((state)=>state.collection?.loading)
+  const products = useSelector((state) => state.product.products);
   const nav = useNavigate()
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false);
@@ -16,11 +24,44 @@ export default function CollectionForm() {
   const location = useLocation()
   const productIds = location.state?.productId || [];
   const productTotal = location.state?.totalPrice || "";
-      const [initialValues] = useState({
+  const [selectedProducts, setSelectedProducts] = useState(productIds || []);
+
+
+  useEffect(()=>{
+      if(id){
+          dispatch(fetchCollectionById(id))
+          dispatch(fetchProducts())
+          if (productIds && productIds.length > 0) {
+  setSelectedProducts(productIds);
+  formik.setFieldValue("products_id", productIds);
+}
+      }
+  },[dispatch, id])
+      const [initialValues, setInitialValues] = useState({
   name: "",
   description: "",
+  total: "",
   image: null,
 });
+
+
+useEffect(() => {
+    if (collection) {
+      const initialProductIds = collection.products?.map(p => p.id) || [];
+          const init = {
+             name: collection?.name || "",
+        description: collection?.description || "",
+        total: productTotal || collection?.total || "",
+        image: collection?.image || null,
+          }
+         formik.setValues(init);
+    setInitialValues(init);
+    setSelectedImage(collection?.image);
+    setSelectedProducts(initialProductIds);
+    formik.setFieldValue("products_id", initialProductIds);
+    console.log(collection?.image)
+    }
+  }, [collection]);
 
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -31,22 +72,26 @@ export default function CollectionForm() {
       .min(2, "Description must be at least 2 characters")
       .max(200, "Description must be at most 200 characters")
       .required("*Description is required"),
-    // total: Yup.string()
-    //   .required("*Description is required"),
-    image: Yup.mixed()
-      .nullable()
-      .test(
-        "fileSize",
-        "Max image size is 2MB",
-        (value) => !value || value.size <= 2000000
-      )
-      .test(
-        "fileType",
-        "Unsupported file type",
-        (value) =>
-          !value ||
-          ["image/jpg", "image/jpeg", "image/png"].includes(value.type)
-      ),
+    total: Yup.string()
+      .required("*Total is required"),
+     image: Yup.mixed()
+       .required("Image is required")
+       .test(
+         "fileSize",
+         "Max image size is 2MB",
+         (value) =>
+           !value ||
+           typeof value === "string" ||
+           value.size <= 2000000
+       )
+       .test(
+         "fileType",
+         "Unsupported file type",
+         (value) =>
+           !value ||
+           typeof value === "string" ||
+           ["image/jpg", "image/jpeg", "image/png"].includes(value.type)
+       ),
   });
 
   const handleSubmit = async (values, { setSubmitting }) => {
@@ -55,8 +100,8 @@ export default function CollectionForm() {
       const formData = new FormData();
       formData.append("name", values.name);
       formData.append("description", values.description);
-      formData.append("total", productTotal);
-      productIds.forEach(id => {
+      formData.append("total", values.total);
+      selectedProducts.forEach(id => {
   formData.append("products_id[]", id);
 });
       if (values.image) {
@@ -64,9 +109,10 @@ export default function CollectionForm() {
       }
       console.log(token)
 
-      const result = await dispatch(createCollection(formData)).unwrap()
+      const result = await dispatch(updateCollection({id, newcollectionData: formData})).unwrap()
       if(result){
-        notify("Your collection is added successfully", "success")
+        notify("Your collection is updated successfully", "success")
+        console.log(selectedProducts)
         nav("/collection-page")
       }
 
@@ -97,13 +143,28 @@ export default function CollectionForm() {
       image: null,
       products_id: productIds,
     },
+    enableReinitialize: true,
     validationSchema,
     onSubmit: handleSubmit,
   });
 
-console.log(productIds)
-console.log(productTotal)
+const handleProductToggle = (productId) => {
+  let updatedProducts;
+  if (selectedProducts.includes(productId)) {
+    updatedProducts = selectedProducts.filter(id => id !== productId);
+  } else {
+    updatedProducts = [...selectedProducts, productId];
+  }
 
+  setSelectedProducts(updatedProducts);
+  formik.setFieldValue("products_id", updatedProducts);
+
+  const totalPrice = products
+    .filter(product => updatedProducts.includes(product.id))
+    .reduce((sum, p) => sum + Number(p.price || 0), 0);
+
+  formik.setFieldValue("total", totalPrice);
+};
 
   const handleImageUpload = (e) => {
     const file = e.currentTarget.files[0];
@@ -116,16 +177,28 @@ console.log(productTotal)
     }
   };
 
+  const handleReset = () =>{
+  setSelectedImage(initialValues.image);
+
+  }
 
     const handleCancel = () => {
-  setSelectedImage(initialValues.image);
+  formik.setValues(initialValues);
 };
+
+      if(loadingPage){
+          return (
+      <div className="min-h-screen w-full flex justify-center items-center">
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
+      </div>
+    );
+  }
 
   return (
     <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-10 pb-0 pt-24 px-4">
       <form
         onSubmit={formik.handleSubmit}
-        className="bg-white shadow-xl rounded-2xl w-full max-w-4xl"
+        className="bg-white shadow-xl rounded-2xl w-full max-w-4xl p-10"
       >
         
         <div className="p-8 flex flex-col md:flex-row gap-8 ">
@@ -185,7 +258,7 @@ console.log(productTotal)
 
   <button
     type="button"
-    onClick={handleCancel}
+    onClick={handleReset}
     className="px-4 py-1 bg-gray-300 text-gray-700 rounded-md text-sm hover:bg-gray-400 transition"
   >
     Reset
@@ -248,7 +321,6 @@ console.log(productTotal)
             type="text"
               id="total"
               name="total"
-              disabled
               className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-customBlue3 resize-none"
               value={formik.values.total}
               onChange={formik.handleChange}
@@ -267,22 +339,43 @@ console.log(productTotal)
         </div>
         
         </div>
-                 <div className="w-full flex justify-between items-center mb-3 ">
-           <button
-          onClick={()=>nav("/product-page")}
-          
-            className="mt-4 w-full mx-auto lg:w-[30%] bg-gray-300 text-customBlue2 rounded-md py-2 text-sm font-semibold hover:bg-gray-400 transition-all disabled:opacity-50"
-          >
-            Back to products
-          </button>
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-4 w-full mx-auto lg:w-[30%] bg-customBlue3 text-white rounded-md py-2 text-sm font-semibold hover:bg-customBlue2 transition-all disabled:opacity-50"
-          >
-            {loading ? "Submitting..." : "Add Collection"}
-          </button>
-         </div>
+        <div className="mt-6">
+  <h3 className="text-lg font-semibold mb-2 text-center">Select Products</h3>
+  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+    {products.map((product) => (
+      <label
+        key={product.id}
+        className="flex items-center gap-2 border border-gray-200 rounded-md px-3 py-2 cursor-pointer hover:bg-gray-100"
+      >
+        <input
+          type="checkbox"
+          checked={selectedProducts.includes(product.id)}
+          onChange={() => handleProductToggle(product.id)}
+        />
+        <span>{product.name} — ${product.price}</span>
+      </label>
+    ))}
+  </div>
+</div>
+
+                          <div className="md:col-span-2 flex justify-center gap-4 mt-5">
+  <button
+    type="submit"
+    disabled={loading}
+    className="px-6 py-2 bg-customBlue3 text-white rounded-xl hover:bg-customBlue2 transition disabled:opacity-50"
+  >
+    {loading ? "Saving..." : "Save Changes"}
+  </button>
+
+  <button
+    type="button"
+    onClick={handleCancel}
+    disabled={loading}
+    className="px-6 py-2 bg-gray-300 text-gray-700 rounded-xl hover:bg-gray-400 transition disabled:opacity-50"
+  >
+    Cancel
+  </button>
+</div>
       </form>
     </div>
   );

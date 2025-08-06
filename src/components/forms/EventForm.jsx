@@ -11,6 +11,18 @@ export default function EventForm() {
   const [loading, setLoading] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
   const dispatch = useDispatch();
+      const [initialValues] = useState({
+  title: "",
+  description: "",
+  start_date: "",
+  end_date: "",
+  category: "",
+  facebookLink: "",
+  formLink: "",
+  isOnline: "",
+  place: "",
+  status: ""
+});
 
   const validationSchema = Yup.object({
     title: Yup.string().min(2).max(50).required("*title is required"),
@@ -56,7 +68,7 @@ export default function EventForm() {
       try {
         const formData = new FormData();
         Object.entries(values).forEach(([key, val]) => {
-          if (key === "images" && val.length > 0) {
+          if (key === "images" && val?.length > 0) {
             val.forEach(img => formData.append("images[]", img));
           } else {
             formData.append(key, val);
@@ -84,13 +96,18 @@ nav("/event-page");
     formik.setFieldValue("images", files);
   };
 
+      const handleCancel = () => {
+  formik.setValues(initialValues);
+  setSelectedImages(initialValues.images);
+};
+
   return (
     <div className="w-full flex justify-center items-center py-8 mt-0 lg:mt-10 pt-24 px-4">
       <form onSubmit={formik.handleSubmit} className="bg-white shadow-xl rounded-2xl w-full max-w-4xl p-8 flex flex-col md:flex-row gap-8 mb-5">
         <div className="flex flex-col items-center w-full md:w-1/3">
           <label htmlFor="images" className="cursor-pointer group">
             <div className="relative w-32 h-32 rounded-full border-4 border-customBlue3 overflow-hidden group-hover:opacity-90 transition-all">
-              {selectedImages.length > 0 ? (
+              {selectedImages?.length > 0 ? (
                 <div className="flex gap-2">
                   {selectedImages.map((img, idx) => (
                     <img key={idx} src={URL.createObjectURL(img)} alt={`Preview ${idx}`} className="object-cover w-16 h-16 rounded-full" />
@@ -108,6 +125,23 @@ nav("/event-page");
             <input type="file" id="images" name="images" accept="image/*" className="hidden" multiple onChange={handleImageUpload} />
           </label>
           {formik.errors.images && formik.touched.images && <p className="text-red-500 text-sm mt-2 text-center">{formik.errors.images}</p>}
+                    <div className="flex items-center gap-2 mt-4">
+  <button
+    type="button"
+    onClick={() => document.getElementById("images").click()}
+    className="px-4 py-1 bg-customBlue3 text-white rounded-md text-sm hover:bg-customBlue2 transition"
+  >
+    Upload
+  </button>
+
+  <button
+    type="button"
+    onClick={handleCancel}
+    className="px-4 py-1 bg-gray-300 text-gray-700 rounded-md text-sm hover:bg-gray-400 transition"
+  >
+    Reset
+  </button>
+</div>
         </div>
 
         <div className="w-full md:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -218,15 +252,24 @@ nav("/event-page");
             {formik.errors.status && formik.touched.status && <p className="text-red-500 text-sm mt-1">{formik.errors.status}</p>}
           </div>
 
-          <div className="col-span-2">
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-customBlue3 text-white rounded-md py-2 text-sm font-semibold hover:bg-customBlue2 transition-all disabled:opacity-50"
-            >
-              {loading ? "Submitting..." : "Add Event"}
-            </button>
-          </div>
+                   <div className="md:col-span-2 flex justify-center gap-4">
+  <button
+    type="submit"
+    disabled={loading}
+    className="px-6 py-2 bg-customBlue3 text-white rounded-xl hover:bg-customBlue2 transition disabled:opacity-50"
+  >
+    {loading ? "Adding..." : "Add Event"}
+  </button>
+
+  <button
+    type="button"
+    onClick={handleCancel}
+    disabled={loading}
+    className="px-6 py-2 bg-gray-300 text-gray-700 rounded-xl hover:bg-gray-400 transition disabled:opacity-50"
+  >
+    Cancel
+  </button>
+</div>
         </div>
       </form>
     </div>

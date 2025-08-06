@@ -16,8 +16,11 @@ export default function CommitteePage() {
   const nav = useNavigate();
   const { id } = useParams();
 
+
+
   useEffect(() => {
     if (id) dispatch(fetchCommitteeById(id));
+    console.log(committee?.admins)
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -73,6 +76,32 @@ export default function CommitteePage() {
               <p className="text-gray-700 dark:text-gray-300 text-base sm:text-lg leading-relaxed">
                 {committee?.description}
               </p>
+              {committee?.admins?.length > 0 && (
+  <div className="mt-6">
+    <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
+      Committee Admins
+    </h2>
+    <div className="flex flex-wrap gap-4">
+      {committee?.admins.map((admin) => (
+        <div
+          key={admin.id}
+          className="flex items-center gap-4 bg-gray-100 dark:bg-gray-800 p-4 rounded-xl shadow-sm hover:shadow-md transition duration-200 w-full sm:w-auto"
+        >
+          {/* <img
+            src={admin.avatar || "/default-avatar.png"}
+            alt={admin.name}
+            className="w-12 h-12 rounded-full object-cover"
+          /> */}
+          <div>
+            <p className="text-sm font-medium text-gray-900 dark:text-white">{admin.name}</p>
+            {/* <p className="text-xs text-gray-600 dark:text-gray-400">{admin.email}</p> */}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+
             </div>
 
             <div className="mt-6 flex flex-wrap gap-4 justify-between">

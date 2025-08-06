@@ -118,7 +118,7 @@ const result = await dispatch(loginAdmin(  values )).unwrap();
                 className="absolute right-3 top-3 cursor-pointer text-white"
                 onClick={() => setPasswordVisible(!passwordVisible)}
               >
-                {passwordVisible ? <FaEye className="text-customBlue3" /> : <FaEyeSlash className="text-customBlue3" />}
+                {passwordVisible ? <FaEye className="text-customBlue3 dark:text-customBlue5" /> : <FaEyeSlash className="text-customBlue3 dark:text-customBlue5" />}
               </div>
                             </div>
 

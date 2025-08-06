@@ -15,25 +15,31 @@ export default function EditSliderForm() {
   const [selectedimage, setSelectedimage] = useState(null);
   const post = useSelector((state)=> state.banner?.banner)
   const loadingPage = useSelector((state)=> state.banner?.loading)
+    const [initialValues, setInitialValues] = useState({
+  title: "",
+  link: "",
+  type: "",
+  image: null,
+});
 
 
   useEffect(()=>{
         if(id){
             dispatch(fetchBannerById(id))
-            console.log(post)
         }
     },[dispatch, id])
 
   useEffect(() => {
       if (post) {
-        formik.setValues({
-          title: post?.title || "",
+        const init = {
+           title: post?.title || "",
           link: post?.link || "",
           type: post?.type || "",
           image: post?.image || null,
-        });
+        }
+                  formik.setValues(init);
+    setInitialValues(init);
         setSelectedimage(post?.image);
-        console.log(post)
       }
     }, [post]);
 
@@ -117,6 +123,15 @@ export default function EditSliderForm() {
     }
   };
 
+  const handleReset = () =>{
+  setSelectedimage(initialValues.image);
+
+  }
+
+    const handleCancel = () => {
+  formik.setValues(initialValues);
+};
+
       if(loadingPage){
           return (
       <div className="min-h-screen w-full flex justify-center items-center">
@@ -163,6 +178,23 @@ export default function EditSliderForm() {
                 </div>
               )}
             </div>
+                        <div className="flex items-center gap-2 mt-4">
+  <button
+    type="button"
+    onClick={() => document.getElementById("image").click()}
+    className="px-4 py-1 bg-customBlue3 text-white rounded-md text-sm hover:bg-customBlue2 transition"
+  >
+    Upload
+  </button>
+
+  <button
+    type="button"
+    onClick={handleReset}
+    className="px-4 py-1 bg-gray-300 text-gray-700 rounded-md text-sm hover:bg-gray-400 transition"
+  >
+    Reset
+  </button>
+</div>
             <input
               type="file"
               id="image"
@@ -253,13 +285,24 @@ export default function EditSliderForm() {
             )}
 </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-4 w-full mx-auto lg:w-[50%] bg-customBlue3 text-white rounded-md py-2 text-sm font-semibold hover:bg-customBlue2 transition-all disabled:opacity-50"
-          >
-            {loading ? "Submitting..." : "Save changes"}
-          </button>
+                    <div className="md:col-span-2 flex justify-center gap-4">
+  <button
+    type="submit"
+    disabled={loading}
+    className="px-6 py-2 bg-customBlue3 text-white rounded-xl hover:bg-customBlue2 transition disabled:opacity-50"
+  >
+    {loading ? "Saving..." : "Save Changes"}
+  </button>
+
+  <button
+    type="button"
+    onClick={handleCancel}
+    disabled={loading}
+    className="px-6 py-2 bg-gray-300 text-gray-700 rounded-xl hover:bg-gray-400 transition disabled:opacity-50"
+  >
+    Cancel
+  </button>
+</div>
         </div>
       </form>
     </div>

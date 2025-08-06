@@ -1,22 +1,47 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Formik, useFormik } from "formik";
 import notify from "../../hooks/Notifications";
 import * as Yup from "yup";
-import { createMaterial } from "../../store/reducers/materialSlice";
+import { fetchMaterialById, updateMaterial } from "../../store/reducers/materialSlice";
 import { useSelector,useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-export default function MaterialForm() {
+import { useNavigate, useParams } from "react-router-dom";
+import { ThreeDot } from "react-loading-indicators";
+
+
+export default function EditMaterialForm() {
+    const { id } = useParams()
   const nav = useNavigate()
 const dispatch = useDispatch()
   const [loading, setLoading] = useState(false);
   const semesters =["Semester 1", "Semester 2", "Semester 3", "Semester 4", "Semester 5", "Semester 6", "Semester 7", "Semester 8", "Semester 9", "Semester 10",] 
   const department =["General","Computer Science", "Artificial Intelligence", "Information Technology"];
-      const [initialValues] = useState({
+  useEffect(()=>{
+      if(id){
+          dispatch(fetchMaterialById(id))
+      }
+  },[dispatch, id])
+ const [initialValues, setInitialValues] = useState({
   name: "",
   semester: "",
   link: "",
   department: "",
 });
+  const material = useSelector((state)=>state.material?.material)
+  const loadingPage = useSelector((state)=>state.material?.loading)
+  useEffect(() => {
+    if (material) {
+          const init = {
+             name: material?.name || "",
+        semester: material?.semester || "",
+        link: material?.link || "",
+        department: material?.department || "",
+
+          }
+          formik.setValues(init);
+    setInitialValues(init);
+      
+    }
+  }, [material]);
   const validationSchema = Yup.object({
     name: Yup.string()
     .min(2, "name must be at least 2 characters")
@@ -44,9 +69,9 @@ const dispatch = useDispatch()
       formData.append("department", String(values.department));
       formData.append("link", String(values.link));
   
-      const result = await dispatch(createMaterial({materialData: formData})).unwrap();
+      const result = await dispatch(updateMaterial({id, newMaterialData: values})).unwrap();
       if (result) {
-        notify("Your material is added successfully", "success")
+        notify("Your material is updated successfully", "success")
         nav("/material-page");
       }
     } catch (error) {
@@ -76,6 +101,7 @@ const dispatch = useDispatch()
       department: "",
       link: "",
     },
+    enableReinitialize: true,
     validationSchema,
     onSubmit: handleSubmit,
   });
@@ -83,6 +109,15 @@ const dispatch = useDispatch()
     const handleCancel = () => {
   formik.setValues(initialValues);
 };
+
+      if(loadingPage){
+          return (
+      <div className="min-h-screen w-full flex justify-center items-center">
+        <ThreeDot color="#05284B" size="medium" text="" textColor="" />
+      </div>
+    );
+  }
+
 
   return (
     <div className=" w-full flex justify-center items-center py-8  mt-0 lg:mt-10 pb-0 pt-24 px-4">
@@ -206,7 +241,7 @@ const dispatch = useDispatch()
     disabled={loading}
     className="px-6 py-2 bg-customBlue3 text-white rounded-xl hover:bg-customBlue2 transition disabled:opacity-50"
   >
-    {loading ? "Adding..." : "Add Material"}
+    {loading ? "Saving.." : "Save Material"}
   </button>
 
   <button

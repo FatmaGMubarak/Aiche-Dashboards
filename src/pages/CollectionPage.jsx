@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import cover from '../assets/group-students-posing-with-notepads.jpg';
 import CollectionCard from '../components/cards/CollectionCard';
+import { ShoppingCartIcon } from '@heroicons/react/24/outline';
+
 
 export default function CollectionPage() {
   const [sortOrder, setSortOrder] = useState('asc');
@@ -28,7 +30,7 @@ export default function CollectionPage() {
             </h1>
           </div>
 
-          <div className="flex flex-col justify-center sm:justify-between items-center sm:absolute sm:right-10 sm:mt-12">
+          <div className="flex  justify-center sm:justify-between sm:gap-x-5 items-center sm:absolute sm:right-10 sm:mt-12">
             <Link
               to="/collection-form"
               className="flex text-white bg-customBlue3 hover:bg-customBlue2 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2"
@@ -49,6 +51,14 @@ export default function CollectionPage() {
               </svg>
               <p className="whitespace-nowrap">Add Collection</p>
             </Link>
+
+            <Link
+    to="/order-page"
+    className="flex items-center gap-2 text-white bg-customBlue3 hover:bg-customBlue2 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+  >
+    <ShoppingCartIcon className="w-5 h-5" />
+    <span>Orders</span>
+  </Link>
 
             {/* <select
               value={sortOrder}
