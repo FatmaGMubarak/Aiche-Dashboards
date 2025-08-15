@@ -24,7 +24,6 @@ dispatch(fetchSessions())
 },[dispatch])
 
     const filteredSessions = sessions.filter((session)=>session.committee?.id?.toString() === committeeId?.toString())
-console.log(filteredSessions)
 
  
 const handleDelete = (id) =>{

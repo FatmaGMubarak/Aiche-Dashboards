@@ -20,7 +20,6 @@ export default function CommitteePage() {
 
   useEffect(() => {
     if (id) dispatch(fetchCommitteeById(id));
-    console.log(committee?.admins)
   }, [dispatch, id]);
 
   useEffect(() => {

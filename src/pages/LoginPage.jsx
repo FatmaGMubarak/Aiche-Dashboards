@@ -31,7 +31,7 @@ export default function LoginPage() {
 const result = await dispatch(loginAdmin(  values )).unwrap(); 
 
     if (result) {
-      // notify(`Welcome ${result?.user?.name}! Login Successful.`, "success");
+      notify(`Welcome ${result?.user?.name}! Login Successful.`, "success");
       navigate('/dashboard');
     } else {
       notify("Login failed. Please check your credentials.", "error");

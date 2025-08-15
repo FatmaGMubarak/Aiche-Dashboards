@@ -29,7 +29,7 @@ dispatch(fetchMaterials())
   const filteredMaterials = materialsData?.filter((material =>
     {
       return (
-        (selectedSemester === "All" || material.semester === selectedSemester.toLowerCase()) &&
+        (selectedSemester === "All" || material.semester === selectedSemester) &&
     (selectedDepartment === "All" || material.department === selectedDepartment)
       )
     })
@@ -38,7 +38,6 @@ dispatch(fetchMaterials())
    const handleDelete =  (id) => {
     setMaterialToDelete(id)
     setIsModalOpen(true)
-        console.log(id)
 
   }
 
@@ -49,11 +48,11 @@ dispatch(fetchMaterials())
 const handleConfirm =  () => {
   try {
      dispatch(deleteMaterial(materialToDelete)).unwrap(); 
-    notify("You deleted this banner successfully", "success");
+    notify("You deleted this material successfully", "success");
     dispatch(fetchMaterials())
     setIsModalOpen(false);
   } catch (error) {
-    notify("Failed to delete the banner", "error");
+    notify("Failed to delete the material", "error");
   }
 };
 

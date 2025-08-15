@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { fetchAwardById, deleteAward } from "../../store/reducers/awardSlice";
+import { fetchAwardById, deleteAward, fetchAwards } from "../../store/reducers/awardSlice";
 import notify from "../../hooks/Notifications";
 import DeleteModal from "../../components/confirm/DeleteModal";
 import { MdOutlineModeEdit } from "react-icons/md";
@@ -27,6 +27,7 @@ export default function AwardCard() {
 
   const handleConfirm = () => {
     dispatch(deleteAward(id));
+    dispatch(fetchAwards())
     notify("You deleted this award successfully", "success");
     nav("/award-page");
   };

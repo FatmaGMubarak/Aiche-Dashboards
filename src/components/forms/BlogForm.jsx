@@ -53,7 +53,6 @@ export default function BlogForm() {
       if (values.image) {
         formData.append("image", values.image);
       }
-      console.log(token)
 
       const result = await dispatch(createBlog(formData)).unwrap()
       if(result){

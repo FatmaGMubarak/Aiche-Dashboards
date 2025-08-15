@@ -80,7 +80,6 @@ image: Yup.mixed()
       if (result){
         notify("Profile updated successfully", "success");
         dispatch(getProfile());
-        console.log(formData)
         nav("/profile")
       }
     } catch (err) {

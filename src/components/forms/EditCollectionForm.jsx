@@ -59,7 +59,6 @@ useEffect(() => {
     setSelectedImage(collection?.image);
     setSelectedProducts(initialProductIds);
     formik.setFieldValue("products_id", initialProductIds);
-    console.log(collection?.image)
     }
   }, [collection]);
 
@@ -107,12 +106,10 @@ useEffect(() => {
       if (values.image) {
         formData.append("image", values.image);
       }
-      console.log(token)
 
       const result = await dispatch(updateCollection({id, newcollectionData: formData})).unwrap()
       if(result){
         notify("Your collection is updated successfully", "success")
-        console.log(selectedProducts)
         nav("/collection-page")
       }
 

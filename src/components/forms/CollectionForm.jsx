@@ -62,7 +62,6 @@ export default function CollectionForm() {
       if (values.image) {
         formData.append("image", values.image);
       }
-      console.log(token)
 
       const result = await dispatch(createCollection(formData)).unwrap()
       if(result){
@@ -101,8 +100,6 @@ export default function CollectionForm() {
     onSubmit: handleSubmit,
   });
 
-console.log(productIds)
-console.log(productTotal)
 
 
   const handleImageUpload = (e) => {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchEventById, deleteEvent } from "../store/reducers/eventSlice";
+import { fetchEventById, deleteEvent, fetchEvents } from "../store/reducers/eventSlice";
 import notify from "../hooks/Notifications";
 import DeleteModal from "../components/confirm/DeleteModal";
 import { ThreeDot } from "react-loading-indicators";
@@ -31,6 +31,7 @@ export default function EventData() {
 
   const handleConfirm = () => {
     dispatch(deleteEvent(id));
+    dispatch(fetchEvents())
     notify("You deleted this event successfully", "success");
     nav("/event-page");
   };

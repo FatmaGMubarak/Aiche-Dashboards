@@ -53,7 +53,6 @@ export default function AdminAssignmentPage() {
 
   const handleRemove = async (adminId, committeeId) => {
     try {
-            console.log(adminId)
 
       await dispatch(removeAdminFromCommittee({ adminId, committeeId })).unwrap();
       notify("Admin successfully removed from committee", "success");

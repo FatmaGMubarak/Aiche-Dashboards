@@ -47,7 +47,6 @@ if (!user) {
           ["Committees", "Pending Requests", "Members"].includes(item.title)
         );
 
-        console.log(token)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 via-white to-gray-200 p-6 pt-24">

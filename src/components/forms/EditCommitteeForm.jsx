@@ -23,7 +23,6 @@ export default function EditCommitteeForm() {
 useEffect(()=>{
     if(id){
         dispatch(fetchCommitteeById(id))
-        console.log(committee.img)
     }
 },[dispatch, id])
 useEffect(() => {

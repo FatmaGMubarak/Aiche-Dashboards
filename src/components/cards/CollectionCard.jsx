@@ -59,7 +59,6 @@ export default function CollectionCard() {
             key={collection.id}
             className="relative group w-full h-full flex flex-col justify-between bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 overflow-hidden"
           >
-            {/* Delete Button */}
             <button
               onClick={() => handleDelete(collection?.id)}
               className="absolute top-2 right-2 p-3 rounded-full bg-red-100 hover:bg-red-200 text-red-600 lg:hidden lg:group-hover:block"
@@ -68,7 +67,6 @@ export default function CollectionCard() {
               <FiTrash2 size={20} />
             </button>
 
-            {/* Image */}
             <div className="h-52 sm:h-60 flex items-center justify-center p-5 sm:p-8 overflow-hidden border-b">
               <img
                 src={collection?.image || img}
@@ -77,7 +75,6 @@ export default function CollectionCard() {
               />
             </div>
 
-            {/* Details */}
             <div className="px-5 pt-4 pb-5 flex flex-col flex-grow">
               <div className="text-center">
                 <h1 className="text-xl font-bold text-gray-900 dark:text-white">
@@ -92,7 +89,6 @@ export default function CollectionCard() {
                 Total: {collection?.total} EGP
               </span>
 
-              {/* Included Products */}
               <div className="mt-4">
                 <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">
                   Included Products:
@@ -124,7 +120,6 @@ export default function CollectionCard() {
                 </div>
               </div>
 
-              {/* Buttons */}
               <div className="flex justify-between items-center mt-4">
                 <Link
                   className="inline-block bg-customBlue3 text-white px-4 py-1.5 rounded-lg hover:bg-customBlue2 transition text-sm"

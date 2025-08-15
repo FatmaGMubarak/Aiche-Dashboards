@@ -97,7 +97,6 @@ export default function EditEventForm() {
       };
 
       const result = await dispatch(updateEvent({id, newEventData:jsonData})).unwrap()
-      console.log(result)
       if(result){
 nav("/event-page")
       }

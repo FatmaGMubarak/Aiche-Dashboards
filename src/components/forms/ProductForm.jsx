@@ -53,7 +53,6 @@ export default function ProductForm() {
       if (values.image) {
         formData.append("image", values.image);
       }
-      console.log(token)
 
       const result = await dispatch(createProduct(formData)).unwrap()
       if(result){

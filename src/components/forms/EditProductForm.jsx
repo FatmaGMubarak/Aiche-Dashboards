@@ -74,7 +74,6 @@ useEffect(() => {
       if (values.image) {
         formData.append("image", values.image);
       }
-      console.log(token)
 
       const result = await dispatch(updateProduct({id, newproductData:formData})).unwrap()
       if(result){

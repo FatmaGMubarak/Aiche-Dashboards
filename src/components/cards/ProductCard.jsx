@@ -31,7 +31,6 @@ export default function ProductCard() {
 
  const toggleSelection = (e, productId, productPrice) => {
   e.stopPropagation();
-  console.log(typeof(totalPrice))
   setSelectedIds((prevSelected) => {
     const isSelected = prevSelected.includes(productId);
 

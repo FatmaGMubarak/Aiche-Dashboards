@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import avatar from "../assets/avatar.png";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchBlogById, deleteBlog } from "../store/reducers/blogSlice";
+import { fetchBlogById, deleteBlog, fetchBlogs } from "../store/reducers/blogSlice";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import notify from "../hooks/Notifications";
 import DeleteModal from '../components/confirm/DeleteModal'
@@ -34,6 +34,7 @@ export default function BlogPage() {
   const handleCancel = () => setIsModalOpen(false);
   const handleConfirm = () => {
     dispatch(deleteBlog(id));
+    dispatch(fetchBlogs())
     setIsModalOpen(false);
     notify("You deleted this blog successfully", "success");
     nav("/blog-home");

@@ -19,7 +19,6 @@ const [taskToDelete, setTaskToDelete] = useState(null)
 
 useEffect(() => {
   dispatch(fetchTasks());
-  console.log(tasks)
 }, [dispatch]);
 
 const filteredTasks = tasks.filter(
