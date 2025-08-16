@@ -17,9 +17,6 @@ export default function ProductCard() {
   const [selectedIds, setSelectedIds] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
 
-  // useEffect(() => {
-  //   dispatch(fetchProducts());
-  // }, [dispatch]);
   useEffect(() => {
   if (collectionId) {
     dispatch(fetchCollectionById(collectionId));
