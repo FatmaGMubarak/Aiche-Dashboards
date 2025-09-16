@@ -63,7 +63,6 @@ export default function EventImagesPage() {
   };
 
   const handleSave = async (imageId) => {
-    console.log(imageId)
     const formData = new FormData();
     const event = tempEvents[0];
 
@@ -194,7 +193,7 @@ export default function EventImagesPage() {
           </div>
         )} */}
          <button
-      onClick={() => handleSave(initialEvents?.image[0]?.id)}  // 👈 pass imageId here
+      onClick={() => handleSave(initialEvents?.image[0]?.id)}  
       className="absolute bottom-2 right-2 bg-customBlue1 hover:bg-customBlue3 text-white rounded-full px-2.5 py-1.5 "
     >
       Save
