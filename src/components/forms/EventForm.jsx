@@ -147,7 +147,7 @@ nav("/event-page");
         <div className="w-full md:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6">
           {[
             { label: "Title", id: "title", type: "text" },
-            { label: "Category", id: "category", type: "select", options: ["cat_1", "cat-2", "cat_3", "cat_4"] },
+            { label: "Category", id: "category", type: "select", options: ["Cycle 1", "Cycle 2", "Cycle 3"] },
             { label: "Form Link", id: "formLink", type: "text" },
             { label: "Facebook Link", id: "facebookLink", type: "text" },
             { label: "Start Date", id: "start_date", type: "date" },

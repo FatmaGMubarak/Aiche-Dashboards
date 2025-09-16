@@ -98,6 +98,8 @@ export default function EditEventForm() {
 
       const result = await dispatch(updateEvent({id, newEventData:jsonData})).unwrap()
       if(result){
+                          notify("Your event is updated successfully", "success")
+
 nav("/event-page")
       }
     }catch (error) {
@@ -197,10 +199,9 @@ nav("/event-page")
             className="w-full border rounded px-4 py-2 text-sm"
           >
             <option value="" disabled>{formik.values?.category}</option>
-            <option value="cat_1">category 1</option>
-            <option value="cat_2">category 2</option>
-            <option value="cat_3">category 3</option>
-            <option value="cat_4">category 4</option>
+            <option value="Cycle 1">Cycle 1</option>
+            <option value="Cycle 2">Cycle 2</option>
+            <option value="Cycle 3">Cycle 3</option>
           </select>
           {formik.touched.category && formik.errors.category && (
             <p className="text-red-500 text-sm">{formik.errors.category}</p>
