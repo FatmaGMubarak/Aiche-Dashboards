@@ -47,12 +47,12 @@ const handleViewLess = () =>{
   <div
     key={ele.id}
     onClick={() => nav(`/committee-data/${ele?.id}`)}
-    className="relative bg-white border border-gray-200 rounded-xl shadow-md hover:shadow-lg transition-transform transform hover:scale-105 overflow-hidden flex flex-col h-[400px] group"
+    className="relative bg-white border border-gray-200 rounded-xl shadow-md hover:shadow-lg transition-transform transform hover:scale-105 overflow-hidden flex flex-col h-[450px] group"
   >
     <img
       src={ele.img}
       alt=""
-      className="w-full h-64 object-cover"
+      className="rounded-t-lg h-[250px] object-cover w-full"
     />
     <div className="flex flex-col justify-between flex-grow p-4 text-center">
       <div>
