@@ -62,18 +62,19 @@ export default function EventImagesPage() {
     setIsEditing(true);
   };
 
-  const handleSave = async () => {
+  const handleSave = async (imageId) => {
+    console.log(imageId)
     const formData = new FormData();
     const event = tempEvents[0];
 
     event.image.forEach((imgObj) => {
       if (imgObj.file) {
-        formData.append("image[]", imgObj.file);
+        formData.append("image", imgObj.file);
       }
     });
 
     try {
-      const result = await dispatch(updateImage({ id, formData })).unwrap();
+      const result = await dispatch(updateImage({ id: imageId, formData })).unwrap();
       if (result) {
         nav("/event-page");
         notify("Images uploaded successfully!", "success");
@@ -113,7 +114,7 @@ export default function EventImagesPage() {
               Event Gallery
             </h2>
           </div>
-          <div className="flex justify-center sm:justify-end items-center">
+          <div className="flex justify-center sm:justify-end items-center ">
             <label
               htmlFor="image"
               className="flex items-center gap-2 text-white bg-customBlue3 hover:bg-customBlue2 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 sm:absolute sm:right-12 cursor-pointer"
@@ -146,7 +147,7 @@ export default function EventImagesPage() {
           </div>
         </div>
 
-        <div className="grid gap-10">
+        <div className="grid gap-10 ">
           {tempEvents && tempEvents[0] && (
             <div
               key={tempEvents[0].id}
@@ -176,18 +177,10 @@ export default function EventImagesPage() {
                       >
                         ✕
                       </button>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {isEditing && (
+                              {/* {isEditing && (
           <div className="flex justify-center gap-4 mt-8">
             <button
-              onClick={handleSave}
+              onClick={()=> handleSave(img?.id)}
               className="bg-customBlue1 text-white px-6 py-2 rounded-lg hover:bg-customBlue3"
             >
               Save
@@ -199,7 +192,24 @@ export default function EventImagesPage() {
               Cancel
             </button>
           </div>
-        )}
+        )} */}
+         <button
+      onClick={() => handleSave(initialEvents?.image[0]?.id)}  // 👈 pass imageId here
+      className="absolute bottom-2 right-2 bg-customBlue1 hover:bg-customBlue3 text-white rounded-full px-2.5 py-1.5 "
+    >
+      Save
+    </button>
+                    </div>
+                  ))
+                )}
+                <div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+
       </div>
     </>
   );
