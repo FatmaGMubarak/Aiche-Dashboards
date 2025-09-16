@@ -24,7 +24,7 @@ export default function EventPage() {
         <div className="mt-12 flex flex-col sm:flex-row justify-center sm:justify-between items-center relative">
           <div className="flex justify-center items-center w-full mx-auto">
             <h1 className="text-3xl text-customBlue1 text-center mb-5">
-              Upcoming Events
+              Events
             </h1>
           </div>
 

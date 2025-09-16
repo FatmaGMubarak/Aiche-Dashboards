@@ -26,7 +26,7 @@ export default function EventForm() {
 
   const validationSchema = Yup.object({
     title: Yup.string().min(2).max(50).required("*title is required"),
-    description: Yup.string().min(2).max(200).required("*description is required"),
+    description: Yup.string().min(2).max(4000).required("*description is required"),
     images: Yup.mixed()
       .test("fileSize", "Each image must be <= 5MB", files => !files || files.every(file => file.size <= 5 * 1024 * 1024))
       .test("fileType", "Unsupported file type", files => !files || files.every(file => ["image/jpg", "image/jpeg", "image/png"].includes(file.type))),

@@ -45,7 +45,7 @@ export default function EditAwardForm() {
       .required("*title is required"),
     description: Yup.string()
       .min(2, "description must be at least 2 characters")
-      .max(200, "description must be at most 200 characters")
+      .max(4000, "description must be at most 4000 characters")
       .required("*description is required"),
     date: Yup.date()
     .typeError("Invalid date format")

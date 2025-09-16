@@ -53,7 +53,7 @@ const dispatch = useDispatch()
       .required("*semester is required"),
     department: Yup.string()
       .min(2, "department must be at least 2 characters")
-      .max(200, "department must be at most 200 characters")
+      .max(4000, "department must be at most 200 characters")
       .required("*department is required"),
     link: Yup.string()
     .typeError("Invalid date format")

@@ -49,7 +49,7 @@ useEffect(() => {
   description: Yup.string()
     .required("Description is required")
     .min(2, "Description must be at least 2 characters")
-    .max(200, "Description must be at most 200 characters"),
+    .max(4000, "Description must be at most 200 characters"),
 
   image: Yup.mixed()
     .required("Image is required")
