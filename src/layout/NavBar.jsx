@@ -162,7 +162,7 @@ const NavBar = ({ auth }) => {
             <img
               src={profile?.image_url || avatar}
               alt="Avatar"
-              className="w-8 h-8 rounded-full object-cover border border-white shadow-md"
+              className="w-8 h-8 rounded-full object-cover border border-white shadow-md bg-white"
             />
             <span className="lg:hidden">Profile</span>
           </div>
@@ -175,7 +175,7 @@ const NavBar = ({ auth }) => {
           <img
             src={profile?.image_url || avatar}
             alt="Avatar"
-            className="w-8 h-8 rounded-full object-cover border border-white shadow-md"
+            className="w-8 h-8 rounded-full object-cover border border-white shadow-md bg-white"
           />
           <span className="lg:hidden">Profile</span>
         </div>
