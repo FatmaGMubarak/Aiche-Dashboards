@@ -7,6 +7,7 @@ import notify from '../hooks/Notifications';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import { ThreeDot } from 'react-loading-indicators';
+import { getProfile } from '../store/reducers/userSlice';
 
 export default function AdminAssignmentPage() {
   const dispatch = useDispatch();
@@ -16,13 +17,19 @@ export default function AdminAssignmentPage() {
   const admins = useSelector((state) => state.admin?.admins || []);
   const loading = useSelector((state) => state.admin.loading);
   const committees = useSelector((state) => state.committee.committees || []);
-
+  // const user = useSelector((state)=>state.user?.user)
+const user = JSON.parse(localStorage.getItem("user"));
   const [selectedAdmin, setSelectedAdmin] = useState("");
   const [selectedCommittee, setSelectedCommittee] = useState("");
   const [expandedCommitteeId, setExpandedCommitteeId] = useState(null);
 
+
+  useEffect(()=>{
+    dispatch(getProfile())
+  }, [dispatch])
+
   useEffect(() => {
-    if (!superAdmin) {
+    if (user.is_super_admin !== '1') {
       notify("Unauthorized", "error");
       navigate("/");
     }
@@ -153,12 +160,12 @@ export default function AdminAssignmentPage() {
                       {committee.admins?.map((admin, index) => (
                         <li key={index} className="flex justify-between items-center bg-gray-50 p-4 rounded shadow-sm">
                           <span className="font-medium text-gray-700">{admin?.name}</span>
-                          <button
+                          {admin?.name !== user.name ? <button
                             onClick={() => handleRemove(admin.profile.id, committee.id)}
                             className="text-sm bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition"
                           >
                             Remove
-                          </button>
+                          </button> :``}
                         </li>
                       ))}
                     </ul>

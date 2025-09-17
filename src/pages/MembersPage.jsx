@@ -46,7 +46,7 @@ export default function MembersPage() {
                 {member.email}
               </div>
               <div className="text-sm text-gray-500 mb-2">
-                Committee ID: <span className="font-medium">{member.committee_id}</span>
+                Committee Name: <span className="font-medium">{member.committee_id}</span>
               </div>
               <span
                 className={`inline-block mt-2 px-3 py-1 text-xs font-semibold rounded-full ${
