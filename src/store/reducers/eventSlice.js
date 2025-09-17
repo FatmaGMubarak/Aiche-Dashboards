@@ -105,7 +105,7 @@ export const deleteEvent = createAsyncThunk(
 
 export const updateImage = createAsyncThunk(
     "EventImage/updateImage",
-    async ({id, formData}, { rejectWithValue , getState})=>{
+    async ({ formData}, { rejectWithValue , getState})=>{
         try{
             const token = getState().auth.token;
         const config = {
@@ -115,7 +115,7 @@ export const updateImage = createAsyncThunk(
           },
         };
   
-        const response = await api.post(`/api/EventImage/${id}`, formData, config);
+        const response = await api.post(`/api/EventImage`, formData, config);
         return response.data;
 
       } catch (error) {

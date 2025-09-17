@@ -30,7 +30,9 @@ export default function EventImagesPage() {
   const handleModalConfirm = () => {
     dispatch(deleteImage(imageToDelete));
     notify("You deleted this image successfully", "success");
-    nav("/event-page");
+    setIsModalOpen(false)
+    setImageToDelete(null)
+    dispatch(fetchEventById(id))
   };
 
   useEffect(() => {
@@ -62,9 +64,10 @@ export default function EventImagesPage() {
     setIsEditing(true);
   };
 
-  const handleSave = async (imageId) => {
+  const handleSave = async () => {
     const formData = new FormData();
     const event = tempEvents[0];
+        formData.append("event_id", id);
 
     event.image.forEach((imgObj) => {
       if (imgObj.file) {
@@ -73,11 +76,12 @@ export default function EventImagesPage() {
     });
 
     try {
-      const result = await dispatch(updateImage({ id: imageId, formData })).unwrap();
+      const result = await dispatch(updateImage({ formData })).unwrap();
       if (result) {
-        nav("/event-page");
-        notify("Images uploaded successfully!", "success");
+        nav(`/event-image/${id}`);
+        notify("Image uploaded successfully!", "success");
         setIsEditing(false);
+
       }
     } catch (err) {
       console.error("Upload failed", err);
@@ -172,14 +176,32 @@ export default function EventImagesPage() {
                       />
                       <button
                         onClick={() => handleDeleteImage(img?.id)}
-                        className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700 transition-opacity opacity-0 group-hover:opacity-100"
+                        className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700 "
                       >
                         ✕
                       </button>
-                              {/* {isEditing && (
+                              
+         {/* <button
+      onClick={handleSave}  
+      className="absolute bottom-2 right-2 bg-customBlue1 hover:bg-customBlue3 text-white rounded-full px-2.5 py-1.5 "
+    >
+      Save
+    </button> */}
+                    </div>
+                    
+                  ))
+                  
+                )}
+                
+                <div>
+                  
+                </div>
+                
+              </div>
+              {isEditing && (
           <div className="flex justify-center gap-4 mt-8">
             <button
-              onClick={()=> handleSave(img?.id)}
+              onClick={handleSave}
               className="bg-customBlue1 text-white px-6 py-2 rounded-lg hover:bg-customBlue3"
             >
               Save
@@ -191,19 +213,7 @@ export default function EventImagesPage() {
               Cancel
             </button>
           </div>
-        )} */}
-         <button
-      onClick={() => handleSave(initialEvents?.image[0]?.id)}  
-      className="absolute bottom-2 right-2 bg-customBlue1 hover:bg-customBlue3 text-white rounded-full px-2.5 py-1.5 "
-    >
-      Save
-    </button>
-                    </div>
-                  ))
-                )}
-                <div>
-                </div>
-              </div>
+        )}
             </div>
           )}
         </div>
