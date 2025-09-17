@@ -20,6 +20,7 @@ export default function EventImagesPage() {
 
   const handleDeleteImage = (imageId) => {
     setImageToDelete(imageId);
+    console.log(imageId)
     setIsModalOpen(true);
   };
 
@@ -27,12 +28,13 @@ export default function EventImagesPage() {
     setIsModalOpen(false);
   };
 
-  const handleModalConfirm = () => {
+  const handleModalConfirm = async() => {
     dispatch(deleteImage(imageToDelete));
     notify("You deleted this image successfully", "success");
     setIsModalOpen(false)
     setImageToDelete(null)
-    dispatch(fetchEventById(id))
+    await dispatch(fetchEventById(id))
+
   };
 
   useEffect(() => {
@@ -78,6 +80,7 @@ export default function EventImagesPage() {
     try {
       const result = await dispatch(updateImage({ formData })).unwrap();
       if (result) {
+        await dispatch(fetchEventById(id));
         nav(`/event-image/${id}`);
         notify("Image uploaded successfully!", "success");
         setIsEditing(false);
@@ -153,13 +156,13 @@ export default function EventImagesPage() {
         <div className="grid gap-10 ">
           {tempEvents && tempEvents[0] && (
             <div
-              key={tempEvents[0].id}
+              key={tempEvents[0]?.id}
               className="bg-white shadow-xl rounded-2xl p-6 space-y-4"
             >
               <h2 className="text-2xl font-semibold text-blue-700">
-                {tempEvents[0].title}
+                {tempEvents[0]?.title}
               </h2>
-              <p className="text-gray-600">{tempEvents[0].description}</p>
+              <p className="text-gray-600">{tempEvents[0]?.description}</p>
 
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {!tempEvents?.[0]?.image?.length ? (
@@ -167,11 +170,11 @@ export default function EventImagesPage() {
                     <p className="text-center text-lg">No images to preview.</p>
                   </div>
                 ) : (
-                  tempEvents[0].image.map((img, index) => (
-                    <div key={img.id || index} className="relative group">
+                  tempEvents[0]?.image.map((img, index) => (
+                    <div key={img?.id || index} className="relative group">
                       <img
-                        src={img.preview || img.image_path}
-                        alt={`Event Image ${img.id || index}`}
+                        src={img?.preview || img?.image_path}
+                        alt={`Event Image ${img?.id}`}
                         className="rounded-lg w-full h-48 object-cover shadow-md group-hover:opacity-75 transition"
                       />
                       <button
