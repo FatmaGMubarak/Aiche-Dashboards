@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../api/baseUrl";
+import Cookies from "js-cookie";
 
 const initialState = {
   user: null,
@@ -13,7 +14,14 @@ export const getProfile = createAsyncThunk(
     "users/getProfile",
     async (_, {rejectWithValue, getState})=>{
         try{
-            const token = getState().auth.token;
+            let token = getState().auth.token;
+             if (!token) {
+        token = Cookies.get("token") || localStorage.getItem("token");
+      }
+
+      if (!token) {
+        return rejectWithValue("No token found");
+      }
             const config = {
                 headers: {
                   Authorization: `Bearer ${token}`,

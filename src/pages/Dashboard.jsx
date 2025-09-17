@@ -22,14 +22,14 @@ const dashboardItems = [
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const user = useSelector((state) => state.auth.user);
+  const user = JSON.parse(localStorage.getItem("user"))
   const current = useSelector((state) => state.user?.user);
   const token = useSelector((state) => state.auth.token);
   const dispatch = useDispatch()
   
   useEffect(()=>{
     dispatch(getProfile())
-  }, [dispatch])
+  }, [dispatch, token])
   const adminCommittees = current?.committees;
 
 if (!user) {
@@ -41,7 +41,7 @@ if (!user) {
   }
 
   const visibleItems =
-    user?.title === "admim"
+    user?.title === "Super Admin"
       ? dashboardItems
       : dashboardItems.filter((item) =>
           ["Committees", "Pending Requests", "Members"].includes(item.title)

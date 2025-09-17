@@ -4,7 +4,7 @@ import api from "../../api/baseUrl";
 import { LoadData } from "../../utilis/LoadData";
 
 const initialState = {
-  admim: null,
+  superAdmin: null,
   admin: null,
   user: null,
   token: null,
@@ -53,20 +53,21 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     initialAuth: (state) => {
-      const { token, admim, admin } = LoadData();
+      const { token, superAdmin, admin } = LoadData();
 
       if (token) state.token = token;
-      if (admim) state.admim = admim;
+      if (superAdmin) state.superAdmin = superAdmin;
       if (admin) state.admin = admin;
     },
     logout: (state) => {
-      state.admim = null;
+      state.superAdmin = null;
       state.admin = null;
       state.token = null;
       Cookies.remove("token");
-      localStorage.removeItem("admim");
+      localStorage.removeItem("superAdmin");
       localStorage.removeItem("admin");
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
     },
   },
   extraReducers: (builder) => {
@@ -82,9 +83,9 @@ const authSlice = createSlice({
         const user = action.payload?.user;
         const role = user?.title;
 
-        if (role === "admim") {
-          state.admim = user;
-          localStorage.setItem("admim", JSON.stringify(user));
+        if (role === "Super Admin") {
+          state.superAdmin = user;
+          localStorage.setItem("superAdmin", JSON.stringify(user));
         } else if (role === "admin") {
           state.admin = user;
           localStorage.setItem("admin", JSON.stringify(user));
@@ -92,6 +93,7 @@ const authSlice = createSlice({
           state.user = user;
 
         localStorage.setItem("token", action.payload?.token);
+        localStorage.setItem("user", JSON.stringify(user));
         if (action.payload?.token) {
           Cookies.set("token", action.payload.token, { expires: 7 });
         }

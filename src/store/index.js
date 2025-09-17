@@ -12,6 +12,16 @@ import  taskSlice  from './reducers/taskSlice';
 import  sessionSlice  from './reducers/sessionSlice';
 import  collectionSlice  from './reducers/collectionSlice';
 import  productSlice from './reducers/productSlice';
+import Cookies from "js-cookie";
+
+const preloadedState = {
+  auth: {
+    token: Cookies.get("token") || localStorage.getItem("token") || null,
+    loading: false,
+    error: null,
+  },
+};
+
 const store = configureStore(
     {
         reducer:{
@@ -28,8 +38,8 @@ const store = configureStore(
             session:sessionSlice,
             collection:collectionSlice,
             product:productSlice,
-        }
-
+        },
+        preloadedState,
     }
 )
 

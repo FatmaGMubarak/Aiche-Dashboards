@@ -3,17 +3,17 @@ import Cookies from "js-cookie";
 export const LoadData = () => {
   const token = Cookies.get("token") || "";
 
-  const admim = localStorage.getItem("admim");
+  const superAdmin = localStorage.getItem("superAdmin");
 
   try {
     return {
       token,
-      admim: admim ? JSON.parse(admim) : null,
+      superAdmin: superAdmin ? JSON.parse(superAdmin) : null,
     };
   } catch (error) {
     return {
       token,
-      admim: null,
+      superAdmin: null,
     };
   }
 };

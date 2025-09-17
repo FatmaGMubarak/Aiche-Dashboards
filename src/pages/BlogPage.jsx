@@ -86,7 +86,7 @@ export default function BlogPage() {
   <div>
     <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Created By</p>
     <p className="text-lg font-semibold text-gray-900 dark:text-white">{blog?.user?.name === 'superadmin' ? `Aiche SU SC` : blog?.user?.name}</p>
-    <p className="text-sm text-gray-500 dark:text-gray-400">{blog?.user?.title === 'admim' ? `Super Admin` : blog?.user?.title}</p>
+    <p className="text-sm text-gray-500 dark:text-gray-400">{blog?.user?.title === 'Super Admin' ? `Super Admin` : blog?.user?.title}</p>
     <p className="text-sm mt-1 text-gray-600 dark:text-gray-300">{blog?.user?.bio}</p>
     <p className="text-sm mt-1 text-gray-600 dark:text-gray-300 inline-block"><FaPhoneAlt className="inline"/>
  {blog?.user?.phone}</p>

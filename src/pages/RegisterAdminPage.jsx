@@ -6,7 +6,7 @@ import notify from "../hooks/Notifications";
 import { FaSpinner } from "react-icons/fa";
 
 export default function RegisterAdminPage() {
-  const admim = useSelector((state) => state.auth?.admim);
+  const superAdmin = useSelector((state) => state.auth?.superAdmin);
   const user = useSelector((state) => state.auth?.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,10 +24,10 @@ export default function RegisterAdminPage() {
   const [success, setSuccess] = useState("");
 
   useEffect(() => {
-    if (!admim) {
+    if (!superAdmin) {
       navigate("/");
     }
-  }, [navigate, admim]);
+  }, [navigate, superAdmin]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

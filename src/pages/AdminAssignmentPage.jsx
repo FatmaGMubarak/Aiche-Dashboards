@@ -12,7 +12,7 @@ export default function AdminAssignmentPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const admim = useSelector((state) => state.auth.admim);
+  const superAdmin = useSelector((state) => state.auth.superAdmin);
   const admins = useSelector((state) => state.admin?.admins || []);
   const loading = useSelector((state) => state.admin.loading);
   const committees = useSelector((state) => state.committee.committees || []);
@@ -22,11 +22,11 @@ export default function AdminAssignmentPage() {
   const [expandedCommitteeId, setExpandedCommitteeId] = useState(null);
 
   useEffect(() => {
-    if (!admim) {
+    if (!superAdmin) {
       notify("Unauthorized", "error");
       navigate("/");
     }
-  }, [admim, navigate]);
+  }, [superAdmin, navigate]);
 
   useEffect(() => {
     dispatch(fetchAdmins());
