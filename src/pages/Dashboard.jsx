@@ -41,7 +41,8 @@ if (!user) {
   }
 
   const visibleItems =
-    user?.title === "Super Admin"
+    // user?.title === "Super Admin"
+    user?.is_super_admin === "1"
       ? dashboardItems
       : dashboardItems.filter((item) =>
           ["Committees", "Pending Requests", "Members"].includes(item.title)
@@ -55,7 +56,7 @@ if (!user) {
       </h1>
 
       
-      {user?.title === "admin" && adminCommittees?.length > 0 && (
+      {user?.is_super_admin !== "1" && adminCommittees?.length > 0 && (
         <div className="max-w-5xl mx-auto bg-white p-6 rounded-2xl shadow-xl mb-12 border border-gray-200">
           <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
             <FaUsers className="text-customBlue3" /> Your Committees

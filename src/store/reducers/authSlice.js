@@ -10,7 +10,8 @@ const initialState = {
   token: null,
   loading: false,
   error: null,
-  admins: []
+  admins: [],
+  isSuperAdmin: false
 };
 
 export const loginAdmin = createAsyncThunk(
@@ -81,12 +82,21 @@ const authSlice = createSlice({
         state.token = action.payload?.token;
 
         const user = action.payload?.user;
-        const role = user?.title;
-
-        if (role === "Super Admin") {
+        // const role = user?.title;
+        const isuper = user?.is_super_admin;
+        // if (role === "Super Admin") {
+        //   state.superAdmin = user;
+        //   localStorage.setItem("superAdmin", JSON.stringify(user));
+        // } else if (role === "admin") {
+        //   state.admin = user;
+        //   localStorage.setItem("admin", JSON.stringify(user));
+        // }
+        if(isuper === "1"){
+          state.isSuperAdmin = true;
           state.superAdmin = user;
-          localStorage.setItem("superAdmin", JSON.stringify(user));
-        } else if (role === "admin") {
+           localStorage.setItem("superAdmin", JSON.stringify(user));
+        }
+        else{
           state.admin = user;
           localStorage.setItem("admin", JSON.stringify(user));
         }
