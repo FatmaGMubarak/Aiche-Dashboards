@@ -28,14 +28,37 @@ export default function EventImagesPage() {
     setIsModalOpen(false);
   };
 
-  const handleModalConfirm = async() => {
-    dispatch(deleteImage(imageToDelete));
-    notify("You deleted this image successfully", "success");
-    setIsModalOpen(false)
-    setImageToDelete(null)
-    await dispatch(fetchEventById(id))
+  // const handleModalConfirm = async() => {
 
-  };
+  //   dispatch(deleteImage(imageToDelete));
+  //   notify("You deleted this image successfully", "success");
+  //   setIsModalOpen(false)
+  //   setImageToDelete(null)
+  //   await dispatch(fetchEventById(id))
+
+  // };
+const handleModalConfirm = async () => {
+  setTempEvents((prev) => {
+    const current = prev[0];
+    return [
+      {
+        ...current,
+        image: current.image.filter((img) => img.id !== imageToDelete),
+      },
+    ];
+  });
+
+  setIsModalOpen(false);
+  setImageToDelete(null);
+  notify("You deleted this image successfully", "success");
+
+  try {
+    await dispatch(deleteImage(imageToDelete)).unwrap();
+    await dispatch(fetchEventById(id)); 
+  } catch (err) {
+    notify("Failed to delete image", "error");
+  }
+};
 
   useEffect(() => {
     if (id) {
