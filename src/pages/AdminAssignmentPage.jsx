@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import { ThreeDot } from 'react-loading-indicators';
 import { getProfile } from '../store/reducers/userSlice';
+import DeleteModal from '../components/confirm/DeleteModal';
 
 export default function AdminAssignmentPage() {
   const dispatch = useDispatch();
@@ -22,7 +23,9 @@ const user = JSON.parse(localStorage.getItem("user"));
   const [selectedAdmin, setSelectedAdmin] = useState("");
   const [selectedCommittee, setSelectedCommittee] = useState("");
   const [expandedCommitteeId, setExpandedCommitteeId] = useState(null);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [adminToDelete, setAdminToDelete] = useState(null);
+  const [committeeToDelete, setCommitteeToDelete] = useState(null);
 
   useEffect(()=>{
     dispatch(getProfile())
@@ -40,6 +43,8 @@ const user = JSON.parse(localStorage.getItem("user"));
     dispatch(fetchCommittee());
   }, [dispatch]);
 
+ 
+
   const handleAssign = async () => {
     if (!selectedAdmin || !selectedCommittee) {
       notify("Please select both admin and committee.", "error");
@@ -53,16 +58,43 @@ const user = JSON.parse(localStorage.getItem("user"));
       })).unwrap();
 
       notify("Admin successfully assigned!", "success");
+      dispatch(fetchCommittee())
+
     } catch (error) {
       notify("Failed to assign admin.", "error");
     }
   };
 
-  const handleRemove = async (adminId, committeeId) => {
+  // const handleRemove = async (adminId, committeeId) => {
+  //   try {
+
+  //     await dispatch(removeAdminFromCommittee({ adminId, committeeId })).unwrap();
+  //     notify("Admin successfully removed from committee", "success");
+  //     dispatch(fetchCommittee())
+  //   } catch (error) {
+  //     notify("Failed to remove admin.", "error");
+  //   }
+  // };
+
+   const handleRemove = (adminId, committeeId) => {
+    setAdminToDelete(adminId);
+    setCommitteeToDelete(committeeId);
+    setIsModalOpen(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleConfirm =  async() => {
+           console.log(adminToDelete)
+       console.log(committeeToDelete)
     try {
 
-      await dispatch(removeAdminFromCommittee({ adminId, committeeId })).unwrap();
+       await dispatch(removeAdminFromCommittee({ adminId:adminToDelete, committeeId:committeeToDelete })).unwrap();
+
       notify("Admin successfully removed from committee", "success");
+      setIsModalOpen(false)
       dispatch(fetchCommittee())
     } catch (error) {
       notify("Failed to remove admin.", "error");
@@ -83,6 +115,13 @@ const user = JSON.parse(localStorage.getItem("user"));
 
 
   return (
+    <>
+    <DeleteModal
+              onCancel={handleCancel}
+              onConfirm={handleConfirm}
+              isOpen={isModalOpen}
+              message="Are you sure you want to remove this admin?"
+              />
     <div className="max-w-5xl mx-auto p-10 pt-24">
       <h1 className="text-4xl font-bold text-center mb-10 text-customBlue1">Manage Committee Admins</h1>
 
@@ -161,7 +200,7 @@ const user = JSON.parse(localStorage.getItem("user"));
                         <li key={index} className="flex justify-between items-center bg-gray-50 p-4 rounded shadow-sm">
                           <span className="font-medium text-gray-700">{admin?.name}</span>
                           {admin?.name !== user.name ? <button
-                            onClick={() => handleRemove(admin.profile.id, committee.id)}
+                            onClick={() => handleRemove(admin?.profile?.id, committee?.id)}
                             className="text-sm bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition"
                           >
                             Remove
@@ -179,5 +218,7 @@ const user = JSON.parse(localStorage.getItem("user"));
         ))}
       </div>
     </div>
+        </>
+
   );
 }
